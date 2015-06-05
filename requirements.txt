@@ -1,0 +1,3 @@
+flask
+gunicorn
+flask-slackbot==0.1.0
