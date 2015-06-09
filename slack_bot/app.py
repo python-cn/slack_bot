@@ -1,27 +1,47 @@
 # coding=utf-8
-from flask import Flask, request
-from flask import render_template
+from flask import Flask
 
 from flask_slackbot import SlackBot
 
-
-app = Flask(__name__)
-app.config['SLACK_TOKEN'] = 'jLGMzrZn3P1lS2sD848KpPuN'
-app.config['SLACK_CALLBACK'] = '/slack_callback'
-app.debug = True
-slackbot = SlackBot(app)
+import settings
+import plugins
+from ext import redis_store
 
 
-def fn(kwargs):
-    return {'text': '!' + kwargs['text']}
+plugin_modules = []
+for plugin_name in plugins.__all__:
+    __import__('slack_bot.plugins.%s' % plugin_name)
+    plugin_modules.append(getattr(plugins, plugin_name))
 
-def fn2(line):
+
+def callback(kwargs):
+    data = {'message': kwargs['text']}
+    bot = None
+    for plugin_module in plugin_modules:
+        try:
+            if plugin_module.test(data, bot):
+                return {'text': '!' + plugin_module.handle(data, bot)}
+        except:
+            continue
+
+    return {'text': '!呵呵'}
+
+
+def _filter(line):
     return line.startswith('!')
 
 
-slackbot.set_handler(fn)
-slackbot.filter_outgoing(fn2)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(settings)
+    app.debug = True
+    redis_store.init_app(app)
+    slackbot = SlackBot(app)
+    slackbot.set_handler(callback)
+    slackbot.filter_outgoing(_filter)
+    return app
 
+app = create_app()
 
 if __name__ == '__main__':
     app.run()
