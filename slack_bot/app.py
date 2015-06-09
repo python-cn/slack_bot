@@ -15,14 +15,14 @@ for plugin_name in plugins.__all__:
 
 
 def callback(kwargs):
-    data = {'message': kwargs['text']}
+    s = kwargs['text']
+    if isinstance(s, unicode):
+        s = s.encode('utf-8')
+    data = {'message': s}
     bot = None
     for plugin_module in plugin_modules:
-        try:
-            if plugin_module.test(data, bot):
-                return {'text': '!' + plugin_module.handle(data, bot)}
-        except:
-            continue
+        if plugin_module.test(data, bot):
+            return {'text': '!' + plugin_module.handle(data, bot)}
 
     return {'text': '!呵呵'}
 

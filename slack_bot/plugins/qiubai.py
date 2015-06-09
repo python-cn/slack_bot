@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-#-*-coding:utf-8-*-
+# coding:utf-8
 
 """
 Copyright (c) 2013 Xiangyu Ye<yexiangyu1985@gmail.com>
@@ -36,25 +35,25 @@ try:
 except:
     REDIS_HOST = 'localhost'
 
-kv = redis.Redis(REDIS_HOST)
+#kv = redis.Redis(REDIS_HOST)
 
-key = time.strftime('%Y-%m-%d')
+key = time.strftime('%y-%m-%d')
 
 
 def test(data, bot):
     return any(w in data['message'] for w in ['糗百', '笑话'])
 
 def handle(data, bot):
-    r = kv.lrange(key, 0, -1)
-    if r:
-        return random.choice(r)
-    r = urllib2.urlopen('http://feed.feedsky.com/qiushi', timeout=60)
+#    r = kv.lrange(key, 0, -1)
+#    if r:
+#        return random.choice(r)
+    r = urllib2.urlopen('http://feedproxy.feedburner.com/qiubai', timeout=60)
     p = r.read()
-    r = re.findall('&lt;p&gt;([\s]+)([^\t]+)&lt;br/&gt;', p)
+    r = re.findall('<\!\[CDATA\[<p>(.*)<br/>', p)
     if r:
-        for l in r:
-            kv.rpush(key, l[1])
-        return random.choice(r)[1]
+        #       for l in r:
+        #    kv.rpush(key, l)
+        return random.choice(r)
     else:
         raise Exception
 

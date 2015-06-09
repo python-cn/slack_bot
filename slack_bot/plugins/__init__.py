@@ -2,7 +2,7 @@
 __all__ = [
     'visit',
     'orz',
-    'wikipedia',
+#    'wikipedia',
     'qiubai',
     'earthquake',
     'airpollution',
