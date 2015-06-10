@@ -3,6 +3,5 @@ requests
 gunicorn
 flask-redis
 sympy==0.7.2
-pyquery==1.2.4
 beautifulsoup4
 flask-slackbot==0.1.0

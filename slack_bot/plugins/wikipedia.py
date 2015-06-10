@@ -25,7 +25,8 @@ the following conditions:
 
 # 维基百科
 
-from pyquery import PyQuery
+from bs4 import BeautifulSoup
+
 import requests
 import re
 
@@ -42,10 +43,11 @@ def handle(data, bot=None, kv=None):
 
 
 def wikipedia(title):
-    r = requests.get('http://zh.wikipedia.org/w/index.php',
-                     params={'title': title, 'printable': 'yes', 'variant': 'zh-cn'}, timeout=10)
-    dom = PyQuery(r.text)
-    return dom('#mw-content-text > p:first').remove('sup')[0].text_content()
+    r = requests.get('http://zh.wikipedia.org/wiki/{0}'.format(title),
+                     timeout=10)
+    soup = BeautifulSoup(r.text)
+    result = soup.find(id='mw-content-text').find('p').text
+    return result if result else '我还不知道哎'
 
 if __name__ == '__main__':
     for message in ['什么是SVM  ????', '什么是薛定谔方程啊', '什么是CSS？']:
