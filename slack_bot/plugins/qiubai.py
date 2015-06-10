@@ -26,16 +26,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # 糗事百科TOP10
 import urllib2
 import re
-import redis
 import time
 import random
-
-try:
-    from settings import REDIS_HOST
-except:
-    REDIS_HOST = 'localhost'
-
-#kv = redis.Redis(REDIS_HOST)
 
 key = time.strftime('%y-%m-%d')
 
@@ -43,16 +35,19 @@ key = time.strftime('%y-%m-%d')
 def test(data, bot):
     return any(w in data['message'] for w in ['糗百', '笑话'])
 
-def handle(data, bot):
-#    r = kv.lrange(key, 0, -1)
-#    if r:
-#        return random.choice(r)
+
+def handle(data, bot, kv=None):
+    if kv is not None:
+        r = kv.lrange(key, 0, -1)
+        if r:
+            return random.choice(r)
     r = urllib2.urlopen('http://feedproxy.feedburner.com/qiubai', timeout=60)
     p = r.read()
     r = re.findall('<\!\[CDATA\[<p>(.*)<br/>', p)
     if r:
-        #       for l in r:
-        #    kv.rpush(key, l)
+        if kv is not None:
+            for l in r:
+                kv.rpush(key, l)
         return random.choice(r)
     else:
         raise Exception

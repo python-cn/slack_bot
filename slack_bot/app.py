@@ -22,7 +22,7 @@ def callback(kwargs):
     bot = None
     for plugin_module in plugin_modules:
         if plugin_module.test(data, bot):
-            return {'text': '!' + plugin_module.handle(data, bot)}
+            return {'text': '!' + plugin_module.handle(data, bot, kv=None)}
 
     return {'text': '!呵呵'}
 
