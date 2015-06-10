@@ -31,7 +31,8 @@ import cPickle as pickle
 
 
 def city(data):
-    cityidDict = pickle.load(file(os.path.join(os.path.dirname(__file__), 'data' + os.path.sep + 'cityid'), 'r'))
+    cityidDict = pickle.load(file(
+        os.path.join(os.path.dirname(__file__), 'data' + os.path.sep + 'cityid'), 'r'))
     for city in cityidDict:
         if city.encode('utf8') in data['message']:
             return True
@@ -44,14 +45,16 @@ def test(data, bot):
 
 def weather(cityid):
     try:
-        weatherinfo = requests.get('http://www.weather.com.cn/data/cityinfo/' + cityid + '.html').json()['weatherinfo']
+        weatherinfo = requests.get(
+            'http://www.weather.com.cn/data/cityinfo/' + cityid + '.html').json()['weatherinfo']
         return (weatherinfo['city'] + ', ' + weatherinfo['weather'] + ', ' + weatherinfo['temp1'] + ' ~ ' + weatherinfo['temp2']).encode('utf8')
     except:
         return 0
 
 
 def handle(data, bot):
-    cityidDict = pickle.load(file(os.path.join(os.path.dirname(__file__), 'data' + os.path.sep + 'cityid'), 'r'))
+    cityidDict = pickle.load(file(
+        os.path.join(os.path.dirname(__file__), 'data' + os.path.sep + 'cityid'), 'r'))
     for city in cityidDict:
         if city.encode('utf8') in data['message']:
             reply = weather(cityidDict[city])

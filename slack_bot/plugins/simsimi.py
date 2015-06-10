@@ -59,21 +59,28 @@ class SimSimi:
             self.initSimSimiCookie()
 
     def initSimSimiCookie(self):
-        self.session.headers.update({'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36'})
+        self.session.headers.update(
+            {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36'})
         self.session.get('http://www.simsimi.com/talk.htm')
-        self.session.headers.update({'Referer': 'http://www.simsimi.com/talk.htm'})
+        self.session.headers.update(
+            {'Referer': 'http://www.simsimi.com/talk.htm'})
         self.session.get('http://www.simsimi.com/talk.htm?lc=ch')
-        self.session.headers.update({'Referer': 'http://www.simsimi.com/talk.htm?lc=ch'})
-        self.session.headers.update({'Accept': 'application/json, text/javascript, */*; q=0.01'})
+        self.session.headers.update(
+            {'Referer': 'http://www.simsimi.com/talk.htm?lc=ch'})
+        self.session.headers.update(
+            {'Accept': 'application/json, text/javascript, */*; q=0.01'})
         self.session.headers.update({'Accept-Encoding': 'gzip, deflate, sdch'})
-        self.session.headers.update({'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4'})
+        self.session.headers.update(
+            {'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4'})
         self.session.headers.update({'Cache-Control': 'no-cache'})
         self.session.headers.update({'Connection': 'keep-alive'})
-        self.session.headers.update({'Content-Type': 'application/json; charset=utf-8'})
+        self.session.headers.update(
+            {'Content-Type': 'application/json; charset=utf-8'})
         self.session.headers.update({'Host': 'www.simsimi.com'})
         self.session.headers.update({'Pragma': 'no-cache'})
         self.session.headers.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.session.headers.update({'Cookie': 'sid=s%3AcsxS39Tq1oLXQj5WKdBN7UZz.T%2FdtU%2BGkt056rKQb%2BwmwD0iJXguRCsyRsv6745ftwfk; Filtering=0.0; Filtering=0.0; isFirst=1; isFirst=1; simsimi_uid=102256985; simsimi_uid=102256985; selected_nc_name=Chinese%20%u2013%20Simplified%20%28%u7C21%u9AD4%29; selected_nc_name=Chinese%20%u2013%20Simplified%20%28%u7C21%u9AD4%29; simsimi_makeup=undefined; simsimi_makeup=undefined; selected_nc=ch; selected_nc=ch; __utmt=1; __utma=119922954.1015526052.1433822720.1433826650.1433836017.4; __utmb=119922954.8.9.1433836034315; __utmc=119922954; __utmz=119922954.1433822720.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)'})
+        self.session.headers.update(
+            {'Cookie': 'sid=s%3AcsxS39Tq1oLXQj5WKdBN7UZz.T%2FdtU%2BGkt056rKQb%2BwmwD0iJXguRCsyRsv6745ftwfk; Filtering=0.0; Filtering=0.0; isFirst=1; isFirst=1; simsimi_uid=102256985; simsimi_uid=102256985; selected_nc_name=Chinese%20%u2013%20Simplified%20%28%u7C21%u9AD4%29; selected_nc_name=Chinese%20%u2013%20Simplified%20%28%u7C21%u9AD4%29; simsimi_makeup=undefined; simsimi_makeup=undefined; selected_nc=ch; selected_nc=ch; __utmt=1; __utma=119922954.1015526052.1433822720.1433826650.1433836017.4; __utmb=119922954.8.9.1433836034315; __utmc=119922954; __utmz=119922954.1433822720.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)'})
 
     def getSimSimiResult(self, message, method='normal'):
         if method == 'normal':
@@ -86,7 +93,8 @@ class SimSimi:
 
     def chat(self, message=''):
         if message:
-            r = self.getSimSimiResult(message, 'normal' if not SIMSIMI_KEY else 'api')
+            r = self.getSimSimiResult(
+                message, 'normal' if not SIMSIMI_KEY else 'api')
             try:
                 answer = r.json()['response'].encode('utf-8')
                 return answer

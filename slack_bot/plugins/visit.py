@@ -27,8 +27,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import random
 
+
 def test(data, bot):
     return '求来访' in data['message']
+
 
 def handle(data, bot):
     bot.visit(data.get('author_id', data['owner_id']))

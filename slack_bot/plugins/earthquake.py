@@ -55,10 +55,11 @@ def jw(a, b):
 
 def handle(data, bot):
     r = urllib2.urlopen('http://data.earthquake.cn/datashare/globeEarthquake_csn.html',
-            timeout=5)
-    t = [re.sub('(<[^>]*>|[\r\n])', '', a) for a in r.read().decode('gbk').encode('utf-8').split('\n')[170:178]]
+                        timeout=5)
+    t = [re.sub('(<[^>]*>|[\r\n])', '', a)
+         for a in r.read().decode('gbk').encode('utf-8').split('\n')[170:178]]
     return '最近一次地震发生在%s（%s），发生时间%s，震级%s，震源深度%s千米，地震类型为%s。' %\
-            (t[7], jw(t[2], t[3]), ' '.join(t[0:2]), t[5], t[4], t[6])
+        (t[7], jw(t[2], t[3]), ' '.join(t[0:2]), t[5], t[4], t[6])
 
 if __name__ == '__main__':
     print handle({'message': '地震了吗？'}, None)

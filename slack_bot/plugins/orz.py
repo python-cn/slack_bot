@@ -27,12 +27,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import random
 
+
 def test(data, bot=None):
     message = data['message']
     for word in ['膜拜', 'orz']:
         if word in message:
             return True
     return False
+
 
 def handle(data, bot=None):
     mobai_icon = '(mb)'
