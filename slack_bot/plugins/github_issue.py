@@ -11,8 +11,8 @@ def test(data, bot):
     return 'issue' in data['message']
 
 
-def handler(data, bot, *args, **kwarg):
-    org_name = kwarg['org_name']
+def handler(data, bot, kv, app):
+    org_name = app.config['org_name']
     repos = requests.get(REPO_API.format(org=org_name)).json()
     rv = ''
     for repo in repos:
@@ -32,4 +32,7 @@ def handler(data, bot, *args, **kwarg):
 
 
 if __name__ == '__main__':
-    print handler(None, None, kv=None, org_name='python-cn')
+    from flask import Flask
+    app = Flask(__name__)
+    app.config['org_name'] = 'python-cn'
+    print handler(None, None, None, app)

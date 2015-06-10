@@ -36,7 +36,7 @@ def test(data, bot):
     return any(w in data['message'] for w in ['糗百', '笑话'])
 
 
-def handle(data, bot, kv=None):
+def handle(data, bot, kv, app):
     if kv is not None:
         r = kv.lrange(key, 0, -1)
         if r:
