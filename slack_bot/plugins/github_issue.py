@@ -22,8 +22,8 @@ def handler(data, bot, *args, **kwarg):
             issues = requests.get(ISSUE_API.format(org=org_name,
                                                    repo=repo_name)).json()
             rv += '*{repo_name}\n'.format(repo_name=repo_name)
-            for idx, issue in enumerate(issues):
-                rv += 'Bug {}:'.format(idx+1)
+            for issue in issues:
+                rv += 'Issue {}:'.format(issue['number'])
                 rv += issue['title'].encode('utf-8') + '\n'
                 rv += issue['url'].encode('utf-8') + '\n'
                 rv += '\n'
