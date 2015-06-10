@@ -110,7 +110,7 @@ def test(data, bot):
     return True
 
 
-def handle(data, bot):
+def handle(data, bot, kv=None):
     return simsimi.chat(data['message'])
 
 if __name__ == '__main__':

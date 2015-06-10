@@ -52,7 +52,7 @@ def weather(cityid):
         return 0
 
 
-def handle(data, bot):
+def handle(data, bot, kv=None):
     cityidDict = pickle.load(file(
         os.path.join(os.path.dirname(__file__), 'data' + os.path.sep + 'cityid'), 'r'))
     for city in cityidDict:

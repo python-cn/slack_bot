@@ -53,7 +53,7 @@ def jw(a, b):
     return '，'.join((aa, bb))
 
 
-def handle(data, bot):
+def handle(data, bot, kv=None):
     r = urllib2.urlopen('http://data.earthquake.cn/datashare/globeEarthquake_csn.html',
                         timeout=5)
     t = [re.sub('(<[^>]*>|[\r\n])', '', a)
