@@ -11,7 +11,7 @@ def test(data, bot):
     return 'issue' in data['message']
 
 
-def handler(data, bot, kv, app):
+def handle(data, bot, kv, app):
     org_name = app.config['org_name']
     repos = requests.get(REPO_API.format(org=org_name)).json()
     rv = ''
@@ -35,4 +35,4 @@ if __name__ == '__main__':
     from flask import Flask
     app = Flask(__name__)
     app.config['org_name'] = 'python-cn'
-    print handler(None, None, None, app)
+    print handle(None, None, None, app)
