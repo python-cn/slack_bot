@@ -14,6 +14,16 @@ for plugin_name in plugins.__all__:
     plugin_modules.append(getattr(plugins, plugin_name))
 
 
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(settings)
+    app.debug = True
+    redis_store.init_app(app)
+    return app
+
+app = create_app()
+
+
 def callback(kwargs):
     s = kwargs['text']
     if isinstance(s, unicode):
@@ -22,7 +32,8 @@ def callback(kwargs):
     bot = None
     for plugin_module in plugin_modules:
         if plugin_module.test(data, bot):
-            return {'text': '!' + plugin_module.handle(data, bot, kv=None)}
+            rv = plugin_module.handle(data, bot, kv=None, app=app)
+            return {'text': '!' + rv}
 
     return {'text': '!呵呵'}
 
@@ -31,17 +42,9 @@ def _filter(line):
     return line.startswith('!')
 
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object(settings)
-    app.debug = True
-    redis_store.init_app(app)
-    slackbot = SlackBot(app)
-    slackbot.set_handler(callback)
-    slackbot.filter_outgoing(_filter)
-    return app
-
-app = create_app()
+slackbot = SlackBot(app)
+slackbot.set_handler(callback)
+slackbot.filter_outgoing(_filter)
 
 if __name__ == '__main__':
     app.run()

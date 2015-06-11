@@ -36,7 +36,7 @@ def test(data, bot=None):
     return False
 
 
-def handle(data, bot=None, kv=None):
+def handle(data, bot, kv, app):
     mobai_icon = '(mb)'
     mobai_text = ' orz '
     return mobai_icon * random.randrange(1, 10) + mobai_text * random.randrange(3)
