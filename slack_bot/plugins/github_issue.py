@@ -25,7 +25,7 @@ def handle(data, bot, kv, app):
             for issue in issues:
                 rv += 'Issue {}:'.format(issue['number'])
                 rv += issue['title'].encode('utf-8') + '\n'
-                rv += issue['url'].encode('utf-8') + '\n'
+                rv += issue['html_url'].encode('utf-8') + '\n'
                 rv += '\n'
 
     return rv if rv else 'no issue'
