@@ -12,7 +12,7 @@ def test(data, bot):
 
 
 def handle(data, bot, kv, app):
-    org_name = app.config['org_name']
+    org_name = app.config.get('ORG_NAME', 'python-cn')
     repos = requests.get(REPO_API.format(org=org_name)).json()
     rv = ''
     for repo in repos:
