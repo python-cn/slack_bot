@@ -5,6 +5,7 @@ SLACK_CALLBACK = '/slack_callback'
 REDIS_URL = 'redis://:password@localhost:6379/0'
 PLUGINS = ['simsimi']
 ORG_NAME = 'python-cn'
+BAIDU_AK = '18691b8e4206238f331ad2e1ca88357e'
 
 try:
     from local_settings import *  # noqa
