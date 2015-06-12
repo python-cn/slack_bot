@@ -101,7 +101,7 @@ def test(data, bot):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')
-    return REGEX.search(data['message'])
+    return REGEX.search(message)
 
 
 def handle(data, bot, kv, app):
@@ -141,13 +141,18 @@ def handle(data, bot, kv, app):
 
         text = '\n'.join(msg)
     else:
-        text = tmpl.format(result[1].encode('utf-8'), result[2].encode('utf-8'))
+        if isinstance(result[1], list):
+            _result = '\n'.join(result[1])
+        else:
+            _result = result[1].encode('utf-8')
+        text = tmpl.format(_result, result[2].encode('utf-8'))
     return text
 
 
 if __name__ == '__main__':
-#    print handle({'message': '我想从兆维工业园到北京南站'}, None, None, None)
+    print handle({'message': '我想从兆维工业园到北京南站'}, None, None, None)
 #    print handle({'message': '我想从人大到北京南站'}, None, None, None)
 #    print handle({'message': '我想从人大到豆瓣'}, None, None, None)
 #    print handle({'message': '我想从兆维工业园到北京南站 步行'}, None, None, None)
-    print handle({'message': '我想从兆维工业园到北京南站 开车'}, None, None, None)
+#    print handle({'message': '我想从兆维工业园到北京南站 开车'}, None, None, None)
+#    print handle({'message': '从酒仙桥去798'}, None, None, None)
