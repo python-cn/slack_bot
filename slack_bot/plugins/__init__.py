@@ -3,6 +3,7 @@ __all__ = [
     'github_issue',
     'orz',
     'baidumap',
+    'bj_bus',
     'wikipedia',
     'qiubai',
     'earthquake',
