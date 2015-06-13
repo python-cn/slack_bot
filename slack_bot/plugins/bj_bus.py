@@ -2,7 +2,7 @@
 from __future__ import print_function
 import urllib2
 import hashlib
-from datetime import date
+from datetime import date, datetime
 import lxml.etree as ET
 
 
@@ -142,25 +142,49 @@ b.check_update()
 
 
 def check_update(b):
-    if b.updated_time.day != date.today():
+    if b.updated_time.day != date.today().day:
         b.check_update()
+        b.updated_time = date.today()
+
+
+def _get_busline_info(busline):
+    return b.get_busline_info(busline)[0]['stations']
+
+
+def get_site_id_by_name(busline, name):
+    for site in _get_busline_info(busline):
+        if site['name'] == name:
+            return site['no']
+    return False
 
 
 def get_busline_info(busline):
     check_update(b)
-    stations = b.get_busline_info(busline)[0]['stations']
+    stations = _get_busline_info(busline)
     return '\n'.join([u'第{0}站: {1}'.format(s['no'], s['name'])
                       for s in stations])
 
 
+def timestamp2str(timestamp, format='%H:%M:%S'):
+    return datetime.fromtimestamp(float(timestamp)).strftime(format)
+
+
 def get_busline_realtime_info(busline, site):
     check_update(b)
+    if not site.isdigit():
+        site = get_site_id_by_name(busline, site)
+        if not site:
+            return '请使用正确地ID或者站点名字, 查询请使用类似`公交 busline`'
     realtime_infos = b.get_busline_realtime_info(busline, site)
+
     return '\n'.join([
-        (u'*车次{0}: 下站: {1} 离下一站的距离: {2}, 预计到达下一站的时间: {3}\n'
-         u'离本站的距离: {3}, 预计到达本站的时间: {4}').format(
-             index, r['ns'], r['nsd'], r['nst'], r['sd'], r['st'])
+        (u'*车次{0}: 下站: {1} 离下一站的距离: {2}米, 预计到达下一站的时间: {3}\n'
+         u'离本站的距离: {4}米, 预计到达本站的时间: {5}').format(
+             index, r['ns'], r['nsd'] if r['nsd'] != '-1' else u'进站中',
+             timestamp2str(r['nst']), r['sd'],
+             timestamp2str(r['st']) if r['st'] != '-1' else u'未知')
         for index, r in enumerate(realtime_infos, 1)
+        if r.values().count('-1') < 3
     ])
 
 
@@ -190,12 +214,13 @@ def handle(data, bot, kv, app):
         return get_busline_info(busline)
     else:
         _, busline, site_num = message.split()
-        if not busline.isdigit() or not site_num.isdigit():
-            return '查询公交全部站点ID请使用类似`公交 busline`, 比如: 公交 571'
+        if not busline.isdigit():
+            return '查询公交全部站点ID和名字请使用类似`公交 busline`, 比如: 公交 571'
         return get_busline_realtime_info(busline, site_num) or '查不到线路'
 
 
 if __name__ == '__main__':
     #    print(handle({'message': '公交 571'}, None, None, None))
     #    print(handle({'message': '公交 571 sd'}, None, None, None))
-    print(handle({'message': '公交 847 15'}, None, None, None))
+    #    print(get_busline_info(847))
+    print(handle({'message': '公交 571 10'}, None, None, None))
