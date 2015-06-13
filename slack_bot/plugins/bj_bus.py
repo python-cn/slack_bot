@@ -3,6 +3,8 @@ from __future__ import print_function
 import urllib2
 import hashlib
 from datetime import date, datetime
+
+import pytz
 import lxml.etree as ET
 
 
@@ -165,8 +167,10 @@ def get_busline_info(busline):
                       for s in stations])
 
 
-def timestamp2str(timestamp, format='%H:%M:%S'):
-    return datetime.fromtimestamp(float(timestamp)).strftime(format)
+def timestamp2str(timestamp, fmt='%H:%M:%S', timezone='Asia/Shanghai'):
+    dt = datetime.utcfromtimestamp(float(timestamp)).replace(tzinfo=pytz.utc)
+    tz = pytz.timezone(timezone)
+    return tz.normalize(dt.astimezone(tz)).strftime(fmt)
 
 
 def get_busline_realtime_info(busline, site):
@@ -223,4 +227,4 @@ if __name__ == '__main__':
     #    print(handle({'message': '公交 571'}, None, None, None))
     #    print(handle({'message': '公交 571 sd'}, None, None, None))
     #    print(get_busline_info(847))
-    print(handle({'message': '公交 571 10'}, None, None, None))
+    print(handle({'message': '公交 571 42'}, None, None, None))

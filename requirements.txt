@@ -1,6 +1,7 @@
 flask
 requests
 lxml
+pytz
 gunicorn
 flask-redis
 sympy==0.7.2
