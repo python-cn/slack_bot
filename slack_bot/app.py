@@ -28,14 +28,13 @@ def callback(kwargs):
     s = kwargs['text']
     if isinstance(s, unicode):
         s = s.encode('utf-8')
+    private = True if 'private' in s or '私聊' in s else False
     data = {'message': s}
     bot = None
     for plugin_module in plugin_modules:
         if plugin_module.test(data, bot):
             rv = plugin_module.handle(data, bot, kv=None, app=app)
-            if not rv.get('private', False):
-                rv = '!' + rv
-            return {'text': rv}
+            return {'text': '!' + rv, 'private': private}
 
     return {'text': '!呵呵'}
 

@@ -6,4 +6,4 @@ gunicorn
 flask-redis
 sympy==0.7.2
 beautifulsoup4
-flask-slackbot==0.1.2
+flask-slackbot==0.1.3

@@ -98,7 +98,7 @@ def list_issues():
 
 
 def test(data, bot):
-    return 'pycoders' in data['message']
+    return 'pycoder' in data['message']
 
 
 def handle(data, bot, kv, app):
