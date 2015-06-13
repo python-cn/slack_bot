@@ -33,7 +33,9 @@ def callback(kwargs):
     for plugin_module in plugin_modules:
         if plugin_module.test(data, bot):
             rv = plugin_module.handle(data, bot, kv=None, app=app)
-            return {'text': '!' + rv}
+            if not rv.get('private', False):
+                rv = '!' + rv
+            return {'text': rv}
 
     return {'text': '!呵呵'}
 
