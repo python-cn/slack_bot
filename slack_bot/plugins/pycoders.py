@@ -35,7 +35,7 @@ def get_all_issues():
         if match:
             no, _, _, title = match.groups()
             no = no.strip()
-            title = title.strip()
+            title = title.strip().replace('\u00a0', '')
         else:
             title = title.replace('Pycoders Weekly', '').strip()
             no = ''
@@ -85,8 +85,11 @@ def parse_issue_page(url):
     ])
 
 
-def get_issue(num=0):
-    issue = list(get_all_issues())[num]
+def get_issue(num=None):
+    issues = list(get_all_issues())
+    if num is None:
+        num = len(issues)
+    issue = list(get_all_issues())[::-1][num-1]
     return parse_issue_page(issue[1])
 
 

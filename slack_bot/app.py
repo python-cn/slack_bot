@@ -29,7 +29,7 @@ def callback(kwargs):
     if isinstance(s, unicode):
         s = s.encode('utf-8')
     private = True if 'private' in s or '私聊' in s else False
-    data = {'message': s}
+    data = {'message': s.replace('私聊', '', 1)}
     bot = None
     for plugin_module in plugin_modules:
         if plugin_module.test(data, bot):
