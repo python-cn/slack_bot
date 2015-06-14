@@ -52,10 +52,10 @@ def place_direction(ak, origin, destination, mode='transit', tactics=11,
             _origin = result.get('origin', [])
             _dest = result.get('destination', [])
         o = ['{0}: {1}'.format(r['name'].encode('utf-8'),
-                               r['address'].encode('utf-8')) \
+                               r['address'].encode('utf-8'))
              for r in _origin]
         d = ['{0}: {1}'.format(r['name'].encode('utf-8'),
-                               r['address'].encode('utf-8')) \
+                               r['address'].encode('utf-8'))
              for r in _dest]
         return (NODIRECTION, o, d)
     # 起终点明确
@@ -104,7 +104,7 @@ def test(data, bot):
     return REGEX.search(message)
 
 
-def handle(data, bot, kv, app):
+def handle(data, bot, cache, app):
     if app is None:
         ak = '18691b8e4206238f331ad2e1ca88357e'
     else:

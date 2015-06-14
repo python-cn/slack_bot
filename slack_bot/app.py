@@ -5,7 +5,7 @@ from flask_slackbot import SlackBot
 
 import settings
 import plugins
-from ext import redis_store
+from ext import redis_store, cache
 
 
 plugin_modules = []
@@ -19,6 +19,7 @@ def create_app():
     app.config.from_object(settings)
     app.debug = True
     redis_store.init_app(app)
+    cache.init_app(app, config={'CACHE_TYPE': app.config.get('CACHE_TYPE')})
     return app
 
 app = create_app()
@@ -33,7 +34,7 @@ def callback(kwargs):
     bot = None
     for plugin_module in plugin_modules:
         if plugin_module.test(data, bot):
-            rv = plugin_module.handle(data, bot, kv=None, app=app)
+            rv = plugin_module.handle(data, bot, cache=cache, app=app)
             return {'text': '!' + rv, 'private': private}
 
     return {'text': '!呵呵'}

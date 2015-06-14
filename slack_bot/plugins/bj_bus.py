@@ -208,7 +208,7 @@ def test(data, bot):
     return test_query_busline(message) or test_query_realtime(message)
 
 
-def handle(data, bot, kv, app):
+def handle(data, bot, cache, app):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')
