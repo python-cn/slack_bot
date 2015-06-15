@@ -7,4 +7,4 @@ Flask-Cache
 flask-redis
 sympy
 beautifulsoup4
--e git://github.com/dongweiming/flask-slackbot.git@647ed98c92137b52c865b1d1f5d5c6bd2b7b31f8#egg=flask-slackbot
+flask-slackbot==0.1.7
