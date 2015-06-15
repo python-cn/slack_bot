@@ -1,4 +1,5 @@
 # coding=utf-8
+import cgi
 from datetime import datetime
 
 from lxml import etree
@@ -20,8 +21,13 @@ NODE_UPDATE_KEY = 'v2ex:update:{0}'  # node 缓存时间根据发布topic频繁�
 
 
 def get_updated_interval(cache, node_name, feeds, default=ONE_DAY):
-    published_times = [cache.get(TOPIC_KEY.format(id))['published']
-                       for id in feeds]
+    published_times = []
+    for id in feeds:
+        topic = cache.get(TOPIC_KEY.format(id))
+        if topic:
+            published_times.append(topic['published'])
+        else:
+            print 'topic {} not cached!'.format(id)
     min = default
     for i in range(len(published_times) - 1):
         sec = (published_times[i] - published_times[i + 1]).total_seconds()
@@ -45,8 +51,6 @@ def fetch2cache(node_name, cache):
         topic = {}
         id = entry[2].text.rpartition('/')[-1]
         key = TOPIC_KEY.format(id)
-        if cache.get(key):
-            break
         for el in entry:
             for tag in TAGS:
                 if el.tag.endswith(tag):
@@ -70,12 +74,19 @@ def fetch(cache=None, force=False):
         node_key = NODE_KEY.format(node)
         res = cache.get(node_key)
         if res and not force:
-            ids.extend(res)
+            ids.update(res)
             continue
         fetch2cache(node, cache)
         ids.update(cache.get(node_key))
     ids = list(set(ids))
-    return sorted(ids, reverse=True)[:MAX_FEEDS_LEN]
+
+    def _key(id):
+        topic = cache.get(TOPIC_KEY.format(id))
+        if not topic:
+            return datetime(1970, 1, 1)
+        return topic['published']
+
+    return sorted(ids, key=_key, reverse=True)[:MAX_FEEDS_LEN]
 
 
 def test(data, bot):
@@ -88,11 +99,14 @@ def handle(data, bot, cache=None, app=None):
     contents = []
     for id in ids:
         topic = cache.get(TOPIC_KEY.format(id))
+        if not topic:
+            continue
         node = topic['node']
-        msg = u'<{0}|{1}> <{2}|{3}>'.format(TOPIC_URL.format(id),
-                                            topic['title'],
-                                            NODE_URL.format(node),
-                                            node)
+        msg = u'<{0}|{1} [{2}]>   <{3}|{4}>'.format(TOPIC_URL.format(id),
+                                                    cgi.escape(topic['title']),
+                                                    topic['published'],
+                                                    NODE_URL.format(node),
+                                                    node)
         contents.append(msg)
     return '\n'.join(contents)
 
