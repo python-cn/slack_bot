@@ -35,7 +35,7 @@ def test(data, bot=None):
     return '什么是' in data['message']
 
 
-def handle(data, bot, kv, app):
+def handle(data, bot, cache, app):
     m = re.search('(?<=什么是)(.+?)(?=啊|那|呢|哈|！|。|？|\?|\s|\Z)', data['message'])
     if m and m.groups():
         return wikipedia(m.groups()[0])

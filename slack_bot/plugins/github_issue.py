@@ -11,7 +11,7 @@ def test(data, bot):
     return 'issue' in data['message']
 
 
-def handle(data, bot, kv, app):
+def handle(data, bot, cache, app):
     org_name = app.config.get('ORG_NAME', 'python-cn')
     repos = requests.get(REPO_API.format(org=org_name)).json()
     rv = ''

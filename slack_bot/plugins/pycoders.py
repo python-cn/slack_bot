@@ -5,12 +5,17 @@ from HTMLParser import HTMLParser
 import requests
 from bs4 import BeautifulSoup
 
+from utils import check_cache
+
 API = 'http://us4.campaign-archive1.com/generate-js/?u=9735795484d2e4c204da82a29&fid=1817&show=500'  # noqa
 ISSUES_REGEX = re.compile(r'<div class=\\"campaign\\">(.*?)<\\/a><\\/div>')
 ISSUE_REGEX = re.compile(
     ur'(\d+\\/\d+\\/\d+).*href=\\"(.*)\\" title=\\"(.*?)\\"', re.UNICODE)  # noqa
 TITLE_REGEX = re.compile(ur'Issue(.*)\)(\W*?):(\W*?)(.*)', re.UNICODE)  # noqa
 SPAN_REGEX = re.compile(r'<span.*>(.*)</span>')
+
+GET_ISSUE_KEY = 'pycoders:issue:{0}'
+LIST_ISSUE_KEY = 'pycoders:issue:list'
 
 
 class MyHTMLParser(HTMLParser):
@@ -104,19 +109,20 @@ def test(data, bot):
     return 'pycoder' in data['message']
 
 
-def handle(data, bot, kv, app):
+def handle(data, bot, cache=None, app=None):
     msg = data['message'].split()
     if len(msg) == 1:
-        return get_issue()
+        return check_cache(cache, get_issue)
     elif msg[1] == 'list':
-        return list_issues()
+        return check_cache(cache, list_issues)
     elif msg[1].isdigit():
-        return get_issue(int(msg[1]))
+        return check_cache(cache, get_issue, int(msg[1]))
     return ('`pycoder`默认获得最近一次的weekly\n'
             '`pycoder list`获取全部weekly列表\n'
             '`pycoder X`获得第X次weekly')
 
+
 if __name__ == '__main__':
     print handle({'message': 'pycoder'}, None, None, None)
     print handle({'message': 'pycoder list'}, None, None, None)
-    print handle({'message': 'pycoder 16'}, None, None, None)
+    print handle({'message': 'pycoder 167'}, None, None, None)

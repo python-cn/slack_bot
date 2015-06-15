@@ -36,21 +36,21 @@ def test(data, bot):
     return any(w in data['message'] for w in ['糗百', '笑话'])
 
 
-def handle(data, bot, kv, app):
-    if kv is not None:
-        r = kv.lrange(key, 0, -1)
+def handle(data, bot, cache=None, app=None):
+    if cache is not None:
+        r = cache.get(key)
         if r:
             return random.choice(r)
     r = urllib2.urlopen('http://feedproxy.feedburner.com/qiubai', timeout=60)
     p = r.read()
     r = re.findall('<\!\[CDATA\[<p>(.*)<br/>', p)
     if r:
-        if kv is not None:
-            for l in r:
-                kv.rpush(key, l)
+        if cache is not None:
+            cache.set(key, r)
         return random.choice(r)
     else:
         raise Exception
+
 
 if __name__ == '__main__':
     print handle({'message': '糗百'}, None)

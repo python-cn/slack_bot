@@ -5,6 +5,7 @@ __all__ = [
     'baidumap',
     'bj_bus',
     'pycoders',
+    'v2ex',
     'wikipedia',
     'qiubai',
     'earthquake',

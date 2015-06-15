@@ -42,9 +42,9 @@ def test(data, bot):
     return len(req) > 0
 
 
-def get_desc(cityname, cityshort, kv=None):
-    if kv is not None:
-        r = kv.get('airpollution.%s' % (cityshort))
+def get_desc(cityname, cityshort, cache=None):
+    if cache is not None:
+        r = cache.get('airpollution.%s' % (cityshort))
         if r:
             return r
 
@@ -62,18 +62,18 @@ def get_desc(cityname, cityshort, kv=None):
     text = '{0}实时空气质量指数（AQI）: {1} {2} [最大:{3}, 最小:{4}]'.format(
         cityname.encode('utf-8'), aqiwgtinfo.encode('utf-8'), aqivalue,
         max_pm25, min_pm25)
-    if kv is not None:
-        kv.setex('airpollution.%s' % (cityshort), text, 1800)
+    if cache is not None:
+        cache.set('airpollution.%s' % (cityshort), text, 1800)
     return text
 
 
-def handle(data, bot, kv=None):
+def handle(data, bot, cache=None, app=None):
     message = data['message']
     reqs = filter(lambda p: p[0].encode('utf-8') in message, city)
     s = []
     for i in reqs:
         try:
-            s.append(get_desc(i[0], i[1], kv))
+            s.append(get_desc(i[0], i[1], cache))
         except:
             raise
             pass
