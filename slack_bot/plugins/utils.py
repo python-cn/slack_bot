@@ -3,10 +3,15 @@ import calendar
 from datetime import datetime
 
 import pytz
+from pypinyin import lazy_pinyin
+
+from consts import ONE_DAY
 
 
 def check_cache(cache, fn, *args, **kwargs):
-    return (cache.cached(fn) if cache is not None else fn)(*args, **kwargs)
+    timeout = kwargs.get('timeout', ONE_DAY)
+    return (cache.cached(timeout=timeout)(fn) \
+            if cache is not None else fn)(*args, **kwargs)
 
 
 def timestamp2str(timestamp, fmt='%H:%M:%S', timezone='Asia/Shanghai'):
@@ -21,3 +26,9 @@ def datetime2timestamp(dt=None, timezone='Asia/Shanghai'):
     tz = pytz.timezone(timezone)
     dt = dt.replace(tzinfo=pytz.utc).astimezone(tz)
     return calendar.timegm(dt.timetuple())
+
+
+def to_pinyin(word):
+    if not isinstance(word, unicode):
+        word = word.decode('utf-8')
+    return ''.join(lazy_pinyin(word))

@@ -7,6 +7,7 @@ __all__ = [
     'pycoders',
     'v2ex',
     'toutiao',
+    'movie',
     'wikipedia',
     'qiubai',
     'earthquake',
