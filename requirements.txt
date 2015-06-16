@@ -6,5 +6,6 @@ gunicorn
 Flask-Cache
 flask-redis
 sympy
+pypinyin
 beautifulsoup4
-flask-slackbot==0.1.7
+flask-slackbot
