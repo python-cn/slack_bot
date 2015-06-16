@@ -6,6 +6,7 @@ __all__ = [
     'bj_bus',
     'pycoders',
     'v2ex',
+    'toutiao',
     'wikipedia',
     'qiubai',
     'earthquake',
