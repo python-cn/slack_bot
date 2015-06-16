@@ -2,11 +2,11 @@
 from __future__ import print_function
 import urllib2
 import hashlib
-from datetime import date, datetime
+from datetime import date
 
-import pytz
 import lxml.etree as ET
 
+from utils import timestamp2str
 
 # https://github.com/andelf/beijing-realtime-bus/blob/master/bjgj.py
 class Cipher(object):
@@ -165,12 +165,6 @@ def get_busline_info(busline):
     stations = _get_busline_info(busline)
     return '\n'.join([u'第{0}站: {1}'.format(s['no'], s['name'])
                       for s in stations])
-
-
-def timestamp2str(timestamp, fmt='%H:%M:%S', timezone='Asia/Shanghai'):
-    dt = datetime.utcfromtimestamp(float(timestamp)).replace(tzinfo=pytz.utc)
-    tz = pytz.timezone(timezone)
-    return tz.normalize(dt.astimezone(tz)).strftime(fmt)
 
 
 def get_busline_realtime_info(busline, site):
