@@ -1,5 +1,8 @@
 # coding=utf-8
 
+DEBUG = False
+SECRET_KEY = 'o\xdd\x02I\x0b\xbbBP4\x97\xab\xe0GF\xfba\x14_\x03\xa9\xe8\xfa\xf8c'   # noqa
+
 SLACK_TOKEN = 'jLGMzrZn3P1lS2sD848KpPuN'
 SLACK_CHAT_TOKEN = 'xoxp-4231087425-4231087427-4463321974-03a74a'
 SLACK_CALLBACK = '/slack_callback'
@@ -11,5 +14,5 @@ CACHE_TYPE = 'simple'
 try:
     from local_settings import *  # noqa
 except ImportError:
-    print('You may need rename local_config.py.example to local_config.py, '
-          'then update your settings')
+    print('You may need rename local_settings.py.example '
+          'to local_settings.py, then update your settings')
