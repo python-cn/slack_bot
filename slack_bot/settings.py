@@ -13,6 +13,19 @@ SIMSIMI_KEY = '50c086cb-5ea3-4190-bdd6-69787a540ec4'
 
 CACHE_TYPE = 'simple'
 
+TEST_DATA = {
+    'token': 'jLGMzrZn3P1lS2sD848KpPuN',
+    'text': 'text',
+    'team_id': 'T0001',
+    'team_domain': 'example',
+    'channel_id': 'C2147483705',
+    'channel_name': 'channel_name',
+    'timestamp': '1355517523',
+    'user_id': 'U2147483697',
+    'user_name': 'Steve',
+    'trigger_word': '',
+}
+
 try:
     from local_settings import *  # noqa
 except ImportError:
