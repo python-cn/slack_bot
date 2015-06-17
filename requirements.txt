@@ -5,6 +5,7 @@ pytz
 gunicorn
 Flask-Cache
 flask-redis
+Flask-Script
 sympy
 pypinyin
 beautifulsoup4
