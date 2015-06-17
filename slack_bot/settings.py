@@ -9,6 +9,8 @@ SLACK_CALLBACK = '/slack_callback'
 REDIS_URL = 'redis://:password@localhost:6379/0'
 ORG_NAME = 'python-cn'
 BAIDU_AK = '18691b8e4206238f331ad2e1ca88357e'
+SIMSIMI_KEY = '50c086cb-5ea3-4190-bdd6-69787a540ec4'
+
 CACHE_TYPE = 'simple'
 
 try:

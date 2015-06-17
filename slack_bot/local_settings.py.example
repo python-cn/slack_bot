@@ -9,4 +9,6 @@ SLACK_CALLBACK = 'your slack bot callback uri'
 REDIS_URL = 'redis://localhost:6379/0'
 ORG_NAME = 'your organization slug'
 BAIDU_AK = 'your baidu ak'
+SIMSIMI_KEY = 'your simsimi key'
+
 CACHE_TYPE = 'simple'
