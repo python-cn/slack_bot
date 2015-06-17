@@ -1,4 +1,7 @@
 # coding=utf-8
+from functools import partial
+import os
+
 from flask import Flask
 
 from flask_slackbot import SlackBot
@@ -14,18 +17,27 @@ for plugin_name in plugins.__all__:
     plugin_modules.append(getattr(plugins, plugin_name))
 
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__)
     app.config.from_object(settings)
-    app.debug = True
+
+    if isinstance(config, dict):
+        app.config.update(config)
+    elif config:
+        app.config.from_pyfile(os.path.realpath(config))
+
     redis_store.init_app(app)
-    cache.init_app(app, config={'CACHE_TYPE': app.config.get('CACHE_TYPE')})
+    cache.init_app(app)
+
+    slackbot = SlackBot(app)
+    _callback = partial(callback, app=app)
+    slackbot.set_handler(_callback)
+    slackbot.filter_outgoing(_filter)
+
     return app
 
-app = create_app()
 
-
-def callback(kwargs):
+def callback(kwargs, app):
     s = kwargs['text']
     if isinstance(s, unicode):
         s = s.encode('utf-8')
@@ -44,9 +56,7 @@ def _filter(line):
     return line.startswith('!')
 
 
-slackbot = SlackBot(app)
-slackbot.set_handler(callback)
-slackbot.filter_outgoing(_filter)
-
 if __name__ == '__main__':
+    app = create_app()
+    app.debug = True
     app.run()
