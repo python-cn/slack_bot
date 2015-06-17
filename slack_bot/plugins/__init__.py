@@ -8,6 +8,7 @@ __all__ = [
     'v2ex',
     'toutiao',
     'movie',
+    'events',
     'wikipedia',
     'qiubai',
     'earthquake',
