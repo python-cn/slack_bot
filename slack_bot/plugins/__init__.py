@@ -9,6 +9,7 @@ __all__ = [
     'toutiao',
     'movie',
     'events',
+    'pythonweekly',
     'wikipedia',
     'qiubai',
     'earthquake',
