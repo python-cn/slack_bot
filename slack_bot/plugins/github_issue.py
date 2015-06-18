@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 import requests
 
+description = """
+当前 github 组织下所有未关闭的 issues && PR。触发条件: "issue [私聊]"。比如:
+* issue
+"""
 
 ISSUE_API = "https://api.github.com/repos/{org}/{repo}/issues"
 REPO_API = "https://api.github.com/orgs/{org}/repos"

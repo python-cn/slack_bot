@@ -29,6 +29,12 @@ import os
 import requests
 import cPickle as pickle
 
+description = """
+今天的天气情况, 触发条件: "[城市名称] 天气 [私聊]"。比如:
+* 天气
+* 上海天气
+"""
+
 
 def city(data):
     cityidDict = pickle.load(file(

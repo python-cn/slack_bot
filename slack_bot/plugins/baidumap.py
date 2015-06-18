@@ -6,6 +6,11 @@ from datetime import datetime
 
 import requests
 
+description = """
+路线规划, 触发条件: "从 地名 到|去 地名 [出行方式] [私聊]"。比如：
+我想从兆维工业园到北京南站 步行
+"""
+
 
 REGEX = re.compile(ur'从(\w+)[\u53bb|\u5230](\w+)', re.UNICODE)
 HTML_REGEX = re.compile(r'(<.*?>)')

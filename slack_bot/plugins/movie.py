@@ -5,6 +5,14 @@ from bs4 import BeautifulSoup
 
 from utils import to_pinyin
 
+description = """
+最近上映的电影信息。触发条件:
+"[上映 | 热映 | 有什么 | 将] 电影 [上映 | 热映 | 有什么 | 将] [城市名称] [私聊]"
+比如:
+* 最近要将上映的电影
+* 有什么电影 上海
+"""
+
 CURRENT_URL = 'http://movie.douban.com/nowplaying/{0}/'
 LATER_URL = 'http://movie.douban.com/later/{0}/'
 

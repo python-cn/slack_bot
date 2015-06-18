@@ -7,6 +7,13 @@ from bs4 import BeautifulSoup
 
 from utils import check_cache
 
+description = """
+Pycoders Weekly。触发条件: "pycoders [list | ISSUE_ID] [私聊]"。比如:
+* pycoders
+* pycoders list
+* pycoders 20
+"""
+
 API = 'http://us4.campaign-archive1.com/generate-js/?u=9735795484d2e4c204da82a29&fid=1817&show=500'  # noqa
 ISSUES_REGEX = re.compile(r'<div class=\\"campaign\\">(.*?)<\\/a><\\/div>')
 ISSUE_REGEX = re.compile(

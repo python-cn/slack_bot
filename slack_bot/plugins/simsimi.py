@@ -45,6 +45,10 @@ try:
 except:
     SIMSIMI_KEY = '50c086cb-5ea3-4190-bdd6-69787a540ec4'
 
+description = """
+色色的小黄鸡。触发条件：所有未触发其他插件的内容。
+"""
+
 
 class SimSimi:
 

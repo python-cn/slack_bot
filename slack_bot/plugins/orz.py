@@ -27,6 +27,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import random
 
+description = """
+快来膜拜我!, 触发条件: "膜拜 | orz [私聊]"。比如:
+* 膜拜
+* orz
+"""
+
 
 def test(data, bot=None):
     message = data['message']

@@ -18,6 +18,11 @@ NODE_URL = 'http://www.v2ex.com/go/{0}'
 NODE_KEY = 'v2ex:node:{0}'
 TOPIC_KEY = 'v2ex:topic:{0}'
 NODE_UPDATE_KEY = 'v2ex:update:{0}'  # node 缓存时间根据发布topic频繁程度而不同
+description = """
+v2ex feed. 触发条件: "v2ex [%s] [私聊]". 比如:
+* v2ex
+* v2ex python
+""" % ' | '.join(NODES)
 
 
 def get_updated_interval(cache, node_name, feeds, default=ONE_DAY):

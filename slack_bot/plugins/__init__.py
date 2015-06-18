@@ -1,5 +1,6 @@
 # coding=utf-8
 __all__ = [
+    'help',
     'github_issue',
     'orz',
     'baidumap',
