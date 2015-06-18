@@ -94,7 +94,10 @@ def get_issue(num=None):
     issues = list(get_all_issues())
     if num is None:
         num = len(issues)
-    issue = list(get_all_issues())[::-1][num-1]
+    try:
+        issue = list(get_all_issues())[::-1][num-1]
+    except IndexError:
+        return u'找不到这期咯'
     return parse_issue_page(issue[1])
 
 
