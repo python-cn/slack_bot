@@ -43,9 +43,8 @@ def test(data, bot=None):
 
 
 def handle(data, bot, cache=None, app=None):
-    mobai_icon = '(mb)'
-    mobai_text = ' orz '
-    return mobai_icon * random.randrange(1, 10) + mobai_text * random.randrange(3)
+    mobai_icon = ':mb:'
+    return mobai_icon * random.randrange(1, 10)
 
 if __name__ == '__main__':
     print test({'message': 'orz'})

@@ -6,7 +6,6 @@ gunicorn
 Flask-Cache
 flask-redis
 Flask-Script
-sympy
 jieba
 pypinyin
 beautifulsoup4
