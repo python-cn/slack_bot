@@ -30,6 +30,12 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
+description = """
+维基百科。触发条件: "什么是 内容 [私聊]"。比如:
+* 什么是薛定谔方程啊
+* 什么是CSS
+"""
+
 
 def test(data, bot=None):
     return '什么是' in data['message']

@@ -23,6 +23,12 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+description = """
+糗事百科TOP10。触发条件: "糗百 | 笑话 [私聊]"。比如:
+* 糗百
+* 笑话
+"""
+
 # 糗事百科TOP10
 import urllib2
 import re

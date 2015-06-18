@@ -7,13 +7,17 @@ import requests
 from bs4 import BeautifulSoup
 
 from utils import check_cache
-'''
+
+description = """
 获取以下网站的活动列表:
 http://segmentfault.com/events
 http://huiyi.csdn.net/activity/home
 http://www.chekucafe.com/Party
 http://www.huodongxing.com/events
-'''
+触发条件: "最近有什么活动 [城市名称] [私聊]"。比如:
+* 最近有什么活动
+* 最近有什么活动 北京
+"""
 
 TODAY = date.today().strftime('%m-%d')
 

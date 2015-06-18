@@ -16,6 +16,12 @@ CHANNEL_MAPS = {
     '体育': 'news_sports'
 }
 
+description = """
+今日头条。触发条件: "头条 [%s] [私聊]"。比如:
+* 头条
+* 头条 娱乐
+""" % ' | '.join(CHANNEL_MAPS.keys())
+
 
 API = 'http://toutiao.com/api/article/recent/?source=2&count=20&category={0}&max_behot_time={1}&utm_source=toutiao&offset=0'  # noqa
 

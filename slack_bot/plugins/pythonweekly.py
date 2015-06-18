@@ -13,6 +13,13 @@ GET_ISSUE_KEY = 'pythonweekly:issue:{0}'
 LIST_ISSUE_KEY = 'pythonweekly:issue:list'
 MAX_LENGTH = 120
 
+description = """
+Python Weekly。触发条件: "pythonweekly [list | ISSUE_ID] [私聊]"。比如:
+* pythonweekly
+* pythonweekly list
+* pythonweekly 20
+"""
+
 
 def get_all_issues():
     r = requests.get(URL)

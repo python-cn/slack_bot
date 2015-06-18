@@ -8,6 +8,13 @@ import lxml.etree as ET
 
 from utils import timestamp2str
 
+description = """
+北京公交信息, 触发条件: "公交 路数 [当前所在第几站] [私聊]", 比如：
+* 公交 571
+* 公交 571 18
+"""
+
+
 # https://github.com/andelf/beijing-realtime-bus/blob/master/bjgj.py
 class Cipher(object):
     __doc__ = u'encrypt & decrypt base64 data'

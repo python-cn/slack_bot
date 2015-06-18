@@ -30,6 +30,11 @@ import time
 import urllib2
 import re
 
+description = """
+最近发生的地震信息。触发条件："地震了 [私聊]", 比如：
+* 地震了
+"""
+
 
 def test(data, bot):
     return '地震了' in data['message']
