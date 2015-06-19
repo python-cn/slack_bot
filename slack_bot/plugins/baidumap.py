@@ -27,6 +27,9 @@ def address2geo(ak, address, city=u'北京'):
     res = requests.get(GEOCODING_API, params={
         'city': city, 'address': address, 'ak': ak, 'output': 'json'})
     data = res.json()
+    if data['status']:
+        # 一般是无相关结果
+        return False
     if not data['result']['precise'] and data['result']['confidence'] <= 50:
         # 可信度太低, 需要确认
         return False

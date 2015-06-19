@@ -2,7 +2,6 @@
 __all__ = [
     'help',
     'github_issue',
-    'orz',
     'baidumap',
     'bj_bus',
     'pycoders',
@@ -10,11 +9,13 @@ __all__ = [
     'toutiao',
     'movie',
     'events',
+    'dianping',
     'pythonweekly',
     'wikipedia',
     'qiubai',
     'earthquake',
     'airpollution',
     'weather',
+    'orz',
     'simsimi',
 ]
