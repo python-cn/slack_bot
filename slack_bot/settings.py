@@ -10,6 +10,8 @@ REDIS_URL = 'redis://:password@localhost:6379/0'
 ORG_NAME = 'python-cn'
 BAIDU_AK = '18691b8e4206238f331ad2e1ca88357e'
 SIMSIMI_KEY = '50c086cb-5ea3-4190-bdd6-69787a540ec4'
+DIANPING_APPKEY = '41502445'
+DIANPING_SECRET = 'f0c2cc0b4f1048bebffc1527acbaeeb8'
 
 CACHE_TYPE = 'simple'
 

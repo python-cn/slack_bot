@@ -16,10 +16,33 @@ REGEX = re.compile(ur'从(\w+)[\u53bb|\u5230](\w+)', re.UNICODE)
 HTML_REGEX = re.compile(r'(<.*?>)')
 SUGGESTION_API = 'http://api.map.baidu.com/place/v2/suggestion'
 DIRECTION_API = 'http://api.map.baidu.com/direction/v1'
+GEOCODING_API = 'http://api.map.baidu.com/geocoder/v2/'
 
 DIRECTION = 0
 NODIRECTION = 1
 NOSCHEME = 2
+
+
+def address2geo(ak, address, city=u'北京'):
+    res = requests.get(GEOCODING_API, params={
+        'city': city, 'address': address, 'ak': ak, 'output': 'json'})
+    data = res.json()
+    if data['status']:
+        # 一般是无相关结果
+        return False
+    if not data['result']['precise'] and data['result']['confidence'] <= 50:
+        # 可信度太低, 需要确认
+        return False
+    return data['result']['location']
+
+
+def geo2address(ak, location):
+    res = requests.get(GEOCODING_API, params={
+        'location': location, 'ak': ak, 'output': 'json'})
+    data = res.json()
+    if data['status']:
+        return False
+    return data['result']['formatted_address']
 
 
 def place_suggestion(ak, pos):
