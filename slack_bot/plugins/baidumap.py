@@ -152,9 +152,14 @@ def travel_attractions(ak, id):
     res = requests.get(TRAVEL_ATTRACTIONS_API, params={
         'id': id, 'ak': ak, 'output': 'json'})
     data = res.json()
-    # name/location/telephone/star/abstract/description/
-    # ticket_info{price|open_time|attention}
-    return data['result']
+    if data['error']:
+        return '找不到这个景点'
+    data = res.json()['result']
+    return '\n'.join([
+        data['description'],
+        u'票价: ' + data['ticket_info']['price'],
+        u'开放时间: ' + data['ticket_info']['open_time']
+    ])
 
 
 def travel_city(ak, location=u'北京', day='all'):
