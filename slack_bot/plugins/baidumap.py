@@ -1,26 +1,38 @@
 # coding=utf-8
 
 # 百度地图
+import os
 import re
+import cPickle as pickle
 from datetime import datetime
 
 import requests
+
+from utils import to_pinyin
 
 description = """
 路线规划, 触发条件: "从 地名 到|去 地名 [出行方式] [私聊]"。比如：
 我想从兆维工业园到北京南站 步行
 """
 
-
+HERE = os.path.abspath(os.path.dirname(__file__))
 REGEX = re.compile(ur'从(\w+)[\u53bb|\u5230](\w+)', re.UNICODE)
 HTML_REGEX = re.compile(r'(<.*?>)')
 SUGGESTION_API = 'http://api.map.baidu.com/place/v2/suggestion'
 DIRECTION_API = 'http://api.map.baidu.com/direction/v1'
 GEOCODING_API = 'http://api.map.baidu.com/geocoder/v2/'
+POINT_API = 'http://api.map.baidu.com/telematics/v3/point'
+TRAVEL_ATTRACTIONS_API = 'http://api.map.baidu.com/telematics/v3/travel_attractions'  # noqa
+TRAVEL_CITY_API = 'http://api.map.baidu.com/telematics/v3/travel_city'
+LOCAL_API = 'http://api.map.baidu.com/telematics/v3/local'
+WEATHER_API = 'http://api.map.baidu.com/telematics/v3/weather'
 
 DIRECTION = 0
 NODIRECTION = 1
 NOSCHEME = 2
+
+TagList = pickle.load(
+    open(os.path.join(HERE, 'data' + os.path.sep + 'baidu_tag.pkl'), 'rb'))
 
 
 def address2geo(ak, address, city=u'北京'):
@@ -123,6 +135,47 @@ def place_direction(ak, origin, destination, mode='transit', tactics=11,
             step += '\n' + '-' * 40
             steps.append(step)
         return (DIRECTION, steps, '')
+
+
+# 车联网API
+def point(ak, keyword, city=u'北京'):
+    '''兴趣点查询'''
+    res = requests.get(POINT_API, params={
+        'keyword': keyword, 'city': city, 'ak': ak, 'output': 'json'})
+    data = res.json()
+    return data['pointList']
+
+
+def travel_attractions(ak, id):
+    '''景点详情'''
+    id = to_pinyin(id)
+    res = requests.get(TRAVEL_ATTRACTIONS_API, params={
+        'id': id, 'ak': ak, 'output': 'json'})
+    data = res.json()
+    # name/location/telephone/star/abstract/description/
+    # ticket_info{price|open_time|attention}
+    return data['result']
+
+
+def travel_city(ak, location=u'北京', day='all'):
+    '''X日游'''
+    res = requests.get(TRAVEL_CITY_API, params={
+        'location': location, 'day': day, 'ak': ak, 'output': 'json'})
+    return res.json()['result']
+
+
+def local(ak, tag, keyword, location=u'北京', radius=3000, city=u'北京'):
+    '''周边检索'''
+    res = requests.get(LOCAL_API, params={
+        'cityName': city, 'radius': radius, 'tag': tag,
+        'keyWord': keyword, 'location': location, 'ak': ak, 'output': 'json'})
+    return res.json()['pointList']
+
+
+def weather(ak, location=u'北京'):
+    res = requests.get(WEATHER_API, params={
+        'location': location, 'ak': ak, 'output': 'json'})
+    return res.json()['results']
 
 
 def test(data, bot):
