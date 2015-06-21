@@ -1,6 +1,6 @@
 # coding=utf-8
-from functools import partial
 import os
+from functools import partial
 
 from flask import Flask
 

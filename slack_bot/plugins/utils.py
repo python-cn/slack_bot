@@ -32,3 +32,7 @@ def to_pinyin(word):
     if not isinstance(word, unicode):
         word = word.decode('utf-8')
     return ''.join(lazy_pinyin(word))
+
+
+def chinese2digit(ch):
+    return ['一', '二', '三', '四', '五', '六', '七', '八', '九'].index(ch) + 1

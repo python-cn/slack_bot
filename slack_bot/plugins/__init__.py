@@ -14,6 +14,7 @@ __all__ = [
     'wikipedia',
     'qiubai',
     'earthquake',
+    'travel',
     'airpollution',
     'weather',
     'orz',
