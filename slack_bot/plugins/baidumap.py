@@ -173,9 +173,10 @@ def local(ak, tag, keyword, location=u'北京', radius=3000, city=u'北京'):
 
 
 def weather(ak, location=u'北京'):
+    # location可是是城市名, 也可以是geo
     res = requests.get(WEATHER_API, params={
         'location': location, 'ak': ak, 'output': 'json'})
-    return res.json()['results']
+    return res.json()['results'][0]['weather_data']
 
 
 def test(data, bot):

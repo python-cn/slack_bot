@@ -1,33 +1,12 @@
-#!/usr/bin/env python
-#-*-coding:utf-8-*-
-
-"""
-Copyright (c) 2013 Qimin Huang <qiminis0801@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+# coding=utf-8
 
 # 天气
 import os
-import requests
+import re
 import cPickle as pickle
+
+from baidumap import weather
+
 
 description = """
 今天的天气情况, 触发条件: "[城市名称] 天气 [私聊]"。比如:
@@ -35,39 +14,36 @@ description = """
 * 上海天气
 """
 
+TEMPERATURE_REGEX = re.compile(ur'(\d+)℃')
 
-def city(data):
+
+def get_city(data):
     cityidDict = pickle.load(file(
-        os.path.join(os.path.dirname(__file__), 'data' + os.path.sep + 'cityid'), 'r'))
-    for city in cityidDict:
-        if city.encode('utf8') in data['message']:
-            return True
-    return False
+        os.path.join(os.path.dirname(__file__),
+                     'data' + os.path.sep + 'cityid'), 'r'))
+    return next(
+        (c for c in cityidDict if c.encode('utf8') in data['message']), False)
 
 
 def test(data, bot):
-    return '天气' in data['message'] and city(data)
+    return '天气' in data['message'] and get_city(data)
 
 
-def weather(cityid):
-    try:
-        weatherinfo = requests.get(
-            'http://www.weather.com.cn/data/cityinfo/' + cityid + '.html').json()['weatherinfo']
-        return (weatherinfo['city'] + ', ' + weatherinfo['weather'] + ', ' + weatherinfo['temp1'] + ' ~ ' + weatherinfo['temp2']).encode('utf8')
-    except:
-        return 0
-
-
-def handle(data, bot, cache, app):
-    cityidDict = pickle.load(file(
-        os.path.join(os.path.dirname(__file__), 'data' + os.path.sep + 'cityid'), 'r'))
-    for city in cityidDict:
-        if city.encode('utf8') in data['message']:
-            reply = weather(cityidDict[city])
-            return reply if reply else '不会自己去看天气预报啊'
+def handle(data, bot, cache=None, app=None):
+    if app is None:
+        ak = '18691b8e4206238f331ad2e1ca88357e'
+    else:
+        ak = app.config.get('BAIDU_AK')
+    city = get_city(data)
+    if not city:
+        return '不会自己去看天气预报啊'
+    res = weather(ak, city)[0]
+    current = TEMPERATURE_REGEX.search(res['date']).groups()[0]
+    return u'当前: {0} {1} {2} 温度: {3}'.format(
+        current, res['weather'], res['wind'], res['temperature'])
 
 
 if __name__ == '__main__':
     print test({'message': '天气怎么样'}, None)
     print test({'message': '北京天气怎么样'}, None)
-    print handle({'message': '北京天气怎么样', 'author_id': 'HQM'}, None)
+    print handle({'message': '北京天气怎么样'}, None)
