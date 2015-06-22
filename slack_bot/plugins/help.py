@@ -16,11 +16,11 @@ def format_desc(plugin, prefix='  '):
     )
 
 
-def test(data, bot=None):
+def test(data):
     return 'help' in data['message']
 
 
-def handle(data, bot=None, cache=None, app=None):
+def handle(data, cache=None, app=None):
     plugin_modules = app.plugin_modules if app else []
     docs = []
     for plugin in plugin_modules:

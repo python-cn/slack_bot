@@ -110,12 +110,12 @@ class SimSimi:
 simsimi = SimSimi()
 
 
-def test(data, bot):
+def test(data):
     return True
 
 
-def handle(data, bot, cache, app):
-    return simsimi.chat(data['message'])
+def handle(data, cache, app):
+    return simsimi.chat(data['message']), None
 
 if __name__ == '__main__':
     print handle({'message': '最后一个问题'}, None)

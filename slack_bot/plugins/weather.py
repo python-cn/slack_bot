@@ -6,6 +6,7 @@ import re
 import cPickle as pickle
 
 from baidumap import weather
+from utils import gen_attachment, check_time
 
 
 description = """
@@ -25,11 +26,11 @@ def get_city(data):
         (c for c in cityidDict if c.encode('utf8') in data['message']), False)
 
 
-def test(data, bot):
+def test(data):
     return '天气' in data['message'] and get_city(data)
 
 
-def handle(data, bot, cache=None, app=None):
+def handle(data, cache=None, app=None):
     if app is None:
         ak = '18691b8e4206238f331ad2e1ca88357e'
     else:
@@ -39,8 +40,13 @@ def handle(data, bot, cache=None, app=None):
         return '不会自己去看天气预报啊'
     res = weather(ak, city)[0]
     current = TEMPERATURE_REGEX.search(res['date']).groups()[0]
-    return u'当前: {0} {1} {2} 温度: {3}'.format(
+    text = u'当前: {0} {1} {2} 温度: {3}'.format(
         current, res['weather'], res['wind'], res['temperature'])
+    type = 'dayPictureUrl' if check_time() == 'day' else 'dayPictureUrl'
+    attaches = [gen_attachment(text, res[type], image_type='thumb',
+                               title=u'{}天气预报'.format(city),
+                               title_link='')]
+    return text, attaches
 
 
 if __name__ == '__main__':

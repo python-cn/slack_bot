@@ -38,11 +38,11 @@ import random
 key = time.strftime('%y-%m-%d')
 
 
-def test(data, bot):
+def test(data):
     return any(w in data['message'] for w in ['糗百', '笑话'])
 
 
-def handle(data, bot, cache=None, app=None):
+def handle(data, cache=None, app=None):
     if cache is not None:
         r = cache.get(key)
         if r:
@@ -52,7 +52,7 @@ def handle(data, bot, cache=None, app=None):
     r = re.findall('<\!\[CDATA\[<p>(.*)<br/>', p)
     if r:
         if cache is not None:
-            cache.set(key, r)
+            cache.set(key, r, 1800)
         return random.choice(r)
     else:
         raise Exception

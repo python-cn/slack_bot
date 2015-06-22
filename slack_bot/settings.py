@@ -1,6 +1,6 @@
 # coding=utf-8
 
-DEBUG = False
+DEBUG = True
 SECRET_KEY = 'o\xdd\x02I\x0b\xbbBP4\x97\xab\xe0GF\xfba\x14_\x03\xa9\xe8\xfa\xf8c'   # noqa
 
 SLACK_TOKEN = 'jLGMzrZn3P1lS2sD848KpPuN'

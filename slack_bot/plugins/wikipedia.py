@@ -1,4 +1,4 @@
-#-*-coding:utf-8-*-
+# -*-coding:utf-8-*-
 
 """
 Copyright (c) 2012 yangzhe1991 <ud1937@gmail.com>
@@ -37,11 +37,11 @@ description = """
 """
 
 
-def test(data, bot=None):
+def test(data):
     return '什么是' in data['message']
 
 
-def handle(data, bot, cache, app):
+def handle(data, cache, app):
     m = re.search('(?<=什么是)(.+?)(?=啊|那|呢|哈|！|。|？|\?|\s|\Z)', data['message'])
     if m and m.groups():
         return wikipedia(m.groups()[0])

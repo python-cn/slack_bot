@@ -29,8 +29,10 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
+from utils import gen_attachment
+
 description = """
-空气质量, 触发条件: "[城市名] 空气 [私聊]"，比如：
+空气质量, 触发条件: "[城市名] 空气 [私聊] [带图]"，比如：
 * 空气
 * 天津空气
 """
@@ -42,7 +44,7 @@ headers = {'Referer': 'http://aqicn.org/city/beijing/cn/',
            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36'}  # noqa
 
 
-def test(data, bot):
+def test(data):
     message = data['message']
     if '空气' not in message:
         return False
@@ -50,20 +52,19 @@ def test(data, bot):
     return len(req) > 0
 
 
-def get_desc(cityname, cityshort, cache=None):
+def get_desc(cityname, cityshort, cache=None, app=None):
     if cache is not None:
         r = cache.get('airpollution.%s' % (cityshort))
         if r:
             return r
 
-    r = requests.get(
-        'http://aqicn.org/city/{}/cn/'.format(cityshort.lower()),
-        headers=headers)
+    title_link = 'http://aqicn.org/city/{}/cn/'.format(cityshort.lower())
+
+    r = requests.get(title_link, headers=headers)
     r.encoding = 'utf-8'
     p = r.text
 
     soup = BeautifulSoup(p)
-
     aqiwgtinfo = soup.find(id="aqiwgtinfo'").text
     aqivalue = soup.find("div", {'class': 'aqivalue'}).text
     min_pm25 = soup.find(id='min_pm25').text
@@ -73,23 +74,23 @@ def get_desc(cityname, cityshort, cache=None):
         max_pm25, min_pm25)
     if cache is not None:
         cache.set('airpollution.%s' % (cityshort), text, 1800)
-    return text
+    image_url = soup.find(id='tr_pm25').find(id='td_pm25').find(
+        'img').attrs.get('src')
+    title = soup.find('title').text
+    attaches = [gen_attachment(text, image_url, app=app, title=title,
+                               title_link=title_link)]
+    return text, attaches
 
 
-def handle(data, bot, cache=None, app=None):
+def handle(data, cache=None, app=None):
     message = data['message']
     reqs = filter(lambda p: p[0].encode('utf-8') in message, city)
-    s = []
-    for i in reqs:
-        try:
-            s.append(get_desc(i[0], i[1], cache))
-        except:
-            raise
-            pass
-    if s:
-        return '，'.join(s) + '。'
-    else:
-        return '空气查询失败, 请重试!'
+    req = reqs[0]
+    try:
+        return get_desc(req[0], req[1], cache, app=app)
+    except Exception as e:
+        print 'Error: {}'.format(e)
+    return '空气查询失败, 请重试!', []
 
 
 if __name__ == '__main__':

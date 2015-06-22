@@ -3,11 +3,11 @@
 import requests
 from bs4 import BeautifulSoup
 
-from utils import to_pinyin
+from utils import to_pinyin, gen_attachment
 
 description = """
 最近上映的电影信息。触发条件:
-"[上映 | 热映 | 有什么 | 将] 电影 [上映 | 热映 | 有什么 | 将] [城市名称] [私聊]"
+"[上映 | 热映 | 有什么 | 将] 电影 [上映 | 热映 | 有什么 | 将] [城市名称] [带图] [私聊]"
 比如:
 * 最近要将上映的电影
 * 有什么电影 上海
@@ -26,7 +26,10 @@ def get_later_movie_info(city):
         url = h.attrs['href']
         title = h.text
         content = '|'.join([li.text for li in i.findAll('li')[:4]])
-        yield u'<{url}|{title}> {content}'.format(**locals())
+        image_url = i.find('a').find('img').attrs.get('src', '')
+        yield u'<{url}|{title}> {content}'.format(**locals()), gen_attachment(
+            content, image_url.replace('spst', 'mpst'), image_type='thumb',
+            title=title, title_link=url)
 
 
 def get_current_movie_info(city):
@@ -35,17 +38,22 @@ def get_current_movie_info(city):
     items = soup.find(id='nowplaying').find('ul', {'class': 'lists'}).findAll(
         'li', {'class': 'poster'})
     for i in items:
-        title = i.find('img').attrs.get('alt', '')
+        img = i.find('img')
+        title = img.attrs.get('alt', '')
+        content = '|'.join([li.text for li in i.findAll('li')[:4]])
         url = i.find('a').attrs.get('href', '')
-        yield u'<{url}|{title}>'.format(**locals())
+        image_url = img.attrs.get('src', '')
+        yield u'<{url}|{title}>'.format(**locals()), gen_attachment(
+            content, image_url.replace('spst', 'mpst'), image_type='thumb',
+            title=title, title_link=url)
 
 
-def test(data, bot):
+def test(data):
     return '电影' in data['message'] and \
         any([i in data['message'] for i in ['上映', '热映', '有什么', '将']])
 
 
-def handle(data, bot, cache=None, app=None):
+def handle(data, cache=None, app=None):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')
@@ -58,9 +66,10 @@ def handle(data, bot, cache=None, app=None):
         fn = get_later_movie_info
     else:
         fn = get_current_movie_info
-    return '\n'.join(fn(city))
+    ret = [r for r in fn(city)]
+    return '\n'.join([r[0] for r in ret]), [r[1] for r in ret]
 
 
 if __name__ == '__main__':
-    print handle({'message': '最近要将上映的电影'}, None, None, None)
-    print handle({'message': '有什么电影 上海'}, None, None, None)
+    print handle({'message': '最近要将上映的电影'}, None, None)
+    print handle({'message': '有什么电影 上海'}, None, None)
