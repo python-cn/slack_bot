@@ -26,16 +26,16 @@ v2ex feed. 触发条件: "v2ex [%s] [私聊]". 比如:
 
 
 def get_updated_interval(cache, node_name, feeds, default=ONE_DAY):
-    published_times = []
+    updated_times = []
     for id in feeds:
         topic = cache.get(TOPIC_KEY.format(id))
         if topic:
-            published_times.append(topic['published'])
+            updated_times.append(topic['updated'])
         else:
             print 'topic {} not cached!'.format(id)
     min = default
-    for i in range(len(published_times) - 1):
-        sec = (published_times[i] - published_times[i + 1]).total_seconds()
+    for i in range(len(updated_times) - 1):
+        sec = (updated_times[i] - updated_times[i + 1]).total_seconds()
         if sec < min:
             min = sec
         if min < ONE_MINUTE:
@@ -69,7 +69,6 @@ def fetch2cache(node_name, cache):
     if new_feeds:
         new_feeds += feeds[:MAX_FEEDS_LEN - len(new_feeds)]
         interval = get_updated_interval(cache, node_name, new_feeds)
-        print node_key, new_feeds, interval
         cache.set(node_key, new_feeds, interval)
 
 
@@ -94,11 +93,11 @@ def fetch(cache=None, force=False):
     return sorted(ids, key=_key, reverse=True)[:MAX_FEEDS_LEN]
 
 
-def test(data, bot):
+def test(data):
     return data['message'].startswith('v2ex')
 
 
-def handle(data, bot, cache=None, app=None):
+def handle(data, cache=None, app=None):
     message = data['message']
     ids = fetch(cache=cache, force=(True if u'刷新' in message else False))
     contents = []
@@ -123,4 +122,4 @@ if __name__ == '__main__':
     cache = Cache()
     cache.init_app(app, config={'CACHE_TYPE': 'simple'})
     with app.app_context():
-        print handle({'message': 'v2ex'}, None, cache, app)
+        print handle({'message': 'v2ex'}, cache, app)

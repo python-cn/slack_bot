@@ -84,11 +84,11 @@ def get_issue(num=None):
     return parse_issue_page(issue[0])
 
 
-def test(data, bot):
+def test(data):
     return all([i in data['message'] for i in ['python', 'weekly']])
 
 
-def handle(data, bot, cache=None, app=None):
+def handle(data, cache=None, app=None):
     msg = data['message'].split()
     if len(msg) == 1:
         return check_cache(cache, get_issue)

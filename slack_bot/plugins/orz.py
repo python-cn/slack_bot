@@ -34,7 +34,7 @@ description = """
 """
 
 
-def test(data, bot=None):
+def test(data):
     message = data['message']
     for word in ['膜拜', 'orz']:
         if word in message:
@@ -42,7 +42,7 @@ def test(data, bot=None):
     return False
 
 
-def handle(data, bot, cache=None, app=None):
+def handle(data, cache=None, app=None):
     mobai_icon = ':mb:'
     return mobai_icon * random.randrange(1, 10)
 

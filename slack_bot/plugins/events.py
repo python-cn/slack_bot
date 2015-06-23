@@ -215,16 +215,16 @@ def get_events(city):
                 continue
             seg_lists.append(seg_)
             events.append(
-                u'<[{0}] {1}|{2}> {3} {4}'.format(
-                    org_name, url, title, time, others))
+                u'<{0}|[1] {2}> {3} {4}'.format(
+                    url, org_name, title, time, others))
     return events
 
 
-def test(data, bot):
+def test(data):
     return '最近有什么活动' in data['message']
 
 
-def handle(data, bot, cache=None, app=None):
+def handle(data, cache=None, app=None):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')
@@ -237,5 +237,5 @@ def handle(data, bot, cache=None, app=None):
 
 
 if __name__ == '__main__':
-    print handle({'message': '最近有什么活动'}, None, None, None)
-    print handle({'message': '最近有什么活动 上海'}, None, None, None)
+    print handle({'message': '最近有什么活动'}, None, None)
+    print handle({'message': '最近有什么活动 上海'}, None, None)

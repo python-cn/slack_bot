@@ -25,8 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 # 地震
-import StringIO
-import time
 import urllib2
 import re
 
@@ -36,7 +34,7 @@ description = """
 """
 
 
-def test(data, bot):
+def test(data):
     return '地震了' in data['message']
 
 
@@ -58,9 +56,10 @@ def jw(a, b):
     return '，'.join((aa, bb))
 
 
-def handle(data, bot, cache=None, app=None):
-    r = urllib2.urlopen('http://data.earthquake.cn/datashare/globeEarthquake_csn.html',
-                        timeout=5)
+def handle(data, cache=None, app=None):
+    r = urllib2.urlopen(
+        'http://data.earthquake.cn/datashare/globeEarthquake_csn.html',
+        timeout=5)
     t = [re.sub('(<[^>]*>|[\r\n])', '', a)
          for a in r.read().decode('gbk').encode('utf-8').split('\n')[170:178]]
     return '最近一次地震发生在%s（%s），发生时间%s，震级%s，震源深度%s千米，地震类型为%s。' %\

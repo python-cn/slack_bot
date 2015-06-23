@@ -1,5 +1,6 @@
 # coding=utf-8
 import os
+import re
 from functools import partial
 
 from flask import Flask
@@ -38,17 +39,40 @@ def create_app(config=None):
     return app
 
 
+def replaced(message, rep_words):
+    for word in rep_words:
+        message = message.replace(word, '', 1)
+    return message
+
+
 def callback(kwargs, app):
     s = kwargs['text']
     if isinstance(s, unicode):
         s = s.encode('utf-8')
+    # remove metion block
+    s = re.sub(r'(@.*)\W', '', s)
     private = True if 'private' in s or '私聊' in s else False
-    data = {'message': s.replace('私聊', '', 1)}
-    bot = None
+    attachmented = True if '带图' in s or '附件' in s else False
+    data = {
+        'message': replaced(s, ['private', '私聊', '带图', '附件']).strip()
+    }
+
+    if not data['message']:
+        return {'text': ''}
+
     for plugin_module in plugin_modules:
-        if plugin_module.test(data, bot):
-            rv = plugin_module.handle(data, bot, cache=cache, app=app)
-            return {'text': '!' + rv, 'private': private}
+        if plugin_module.test(data):
+            ret = plugin_module.handle(data, cache=cache, app=app)
+            if not isinstance(ret, tuple):
+                text = ret
+                attaches = None
+            else:
+                text, attaches = ret
+            text = '!' + text
+            if attachmented and attaches:
+                return {'text': ' ', 'private': private,
+                        'attachments': attaches}
+            return {'text': text, 'private': private}
 
     return {'text': '!呵呵'}
 

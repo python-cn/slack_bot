@@ -11,11 +11,11 @@ ISSUE_API = "https://api.github.com/repos/{org}/{repo}/issues"
 REPO_API = "https://api.github.com/orgs/{org}/repos"
 
 
-def test(data, bot):
+def test(data):
     return 'issue' in data['message']
 
 
-def handle(data, bot, cache, app):
+def handle(data, cache, app):
     org_name = app.config.get('ORG_NAME', 'python-cn')
     repos = requests.get(REPO_API.format(org=org_name)).json()
     rv = ''
@@ -39,4 +39,4 @@ if __name__ == '__main__':
     from flask import Flask
     app = Flask(__name__)
     app.config['org_name'] = 'python-cn'
-    print handle(None, None, None, app)
+    print handle(None, None, app)

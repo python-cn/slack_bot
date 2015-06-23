@@ -42,12 +42,13 @@ def get_itinerary(res, details=False):
     return '\n'.join(text)
 
 
-def test(data, bot):
-    return get_city(data) and any([regex.search(data['message']) \
-            for regex in [ATTRACTIONS_REGEX, CITY_REGEX, DAYS_REGEX]])
+def test(data):
+    return get_city(data) and any([
+        regex.search(data['message']) for regex in [CITY_REGEX, DAYS_REGEX]]) \
+        or ATTRACTIONS_REGEX.search(data['message'])
 
 
-def handle(data, bot=None, cache=None, app=None):
+def handle(data, cache=None, app=None):
     if app is None:
         ak = '18691b8e4206238f331ad2e1ca88357e'
     else:
@@ -61,15 +62,15 @@ def handle(data, bot=None, cache=None, app=None):
         if not isinstance(days, int):
             days = chinese2digit(days)
         res = travel_city(ak, location, days)
-        return get_itinerary(res)
+        return get_itinerary(res), None
     city = get_desc(CITY_REGEX, message)
     if city:
         res = travel_city(ak, location)
-        return get_itinerary(res, details=True)
+        return get_itinerary(res, details=True), None
     attractions = get_desc(ATTRACTIONS_REGEX, message)
     if attractions:
-        return travel_attractions(ak, to_pinyin(attractions))
-    return '没找到对应的旅游行程'
+        return travel_attractions(ak, to_pinyin(attractions)), None
+    return '没找到对应的旅游行程', None
 
 if __name__ == '__main__':
     print handle({'message': '北京三日游'})

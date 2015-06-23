@@ -6,9 +6,10 @@ from functools import partial
 import requests
 
 from baidumap import address2geo
+from utils import gen_attachment
 
 description = """
-[大众点评]查找附近美食: "[城市名(默认北京市, 要带`市`)] xx有什么美食|xx附近美食"，比如：
+[大众点评]查找附近美食: "[城市名(默认北京市, 要带`市`)] xx有什么美食|xx附近美食 [带图] [私聊]"，比如：
 * 酒仙桥附近美食
 * 上海市 宜山路455号有什么美食(上海uber)
 """
@@ -64,12 +65,18 @@ class DianpingApi(object):
         address = business['address']  # 地址
         telephone = business['telephone']  # 电话
         avg_rating = business['avg_rating']  # 星级评分，5.0代表五星，4.5代表四星半，依此类推 noqa
+        photo_url = business['photo_url']
         if details:
             product_grade = business['product_grade']  # noqa 产品/食品口味评价，1:一般，2:尚可，3:好，4:很好，5:非常好
             decoration_grade = business['decoration_grade']  # 环境评价 同上
             service_grade = business['service_grade']  # 服务评价 同上
             avg_price = business['avg_price']  # 均价格，单位:元，若没有人均，返回-1
-        return locals()
+        text = u'<{0}|{1}> {2} {3} 距离: {4} '.format(
+            url, name, address, telephone, distance)
+        attach = gen_attachment(
+            u'{0} {1} 距离: {2}'.format(address, telephone, distance),
+            photo_url, image_type='thumb', title=name, title_link=url)
+        return text, attach
 
     def find_businesses(self, latitude, longitude, city='上海',
                         category='美食', sort=1, limit=20, offset_type=1,
@@ -98,12 +105,12 @@ class DianpingApi(object):
                              locals())['businesses']
 
 
-def test(data, bot):
+def test(data):
     return any([i in data['message']
                 for i in ['有什么美食', '大众点评', '附近美食']])
 
 
-def handle(data, bot=None, cache=None, app=None):
+def handle(data, cache=None, app=None):
     message = data['message']
     if app is None:
         appkey = '41502445'
@@ -129,10 +136,8 @@ def handle(data, bot=None, cache=None, app=None):
     else:
         business_ids = api.get_all_id_list(city)
         res = api.get_batch_businesses_by_id(business_ids[:limit])
-    return '\n'.join([
-        (u'<{url}|{name}> {address} {telephone} 距离: {distance} ').format(
-            **api.get_business_info(r))
-        for r in res])
+    ret = [api.get_business_info(r) for r in res]
+    return '\n'.join([r[0] for r in ret]), [r[1] for r in ret]
 
 
 if __name__ == '__main__':

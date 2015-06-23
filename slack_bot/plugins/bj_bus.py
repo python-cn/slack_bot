@@ -202,14 +202,14 @@ def test_query_realtime(message):
     return u'公交' in message and len(message.split()) == 3
 
 
-def test(data, bot):
+def test(data):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')
     return test_query_busline(message) or test_query_realtime(message)
 
 
-def handle(data, bot, cache, app):
+def handle(data, cache, app):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')
@@ -228,4 +228,4 @@ if __name__ == '__main__':
     #    print(handle({'message': '公交 571'}, None, None, None))
     #    print(handle({'message': '公交 571 sd'}, None, None, None))
     #    print(get_busline_info(847))
-    print(handle({'message': '公交 571 42'}, None, None, None))
+    print(handle({'message': '公交 571 42'}, None, None))
