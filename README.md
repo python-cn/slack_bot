@@ -72,6 +72,14 @@ gunicorn wsgi:app localhost:5000 --timeout 240 --log-file -
 #### help插件 - 列出所有插件的帮助信息
 ![](screenshots/help.png)
 
+#### 最主要的是小黄鸡(simsim)
+![](screenshots/simsim.png)
+
+#### 也可以直接发到个人的slackbot channel里:
+
+![](screenshots/direct.png)
+![](screenshots/direct2.png)
+
 ### 提交pull request
 
 我们欢迎你把你想要的idea实现出来, 或者在看过本项目代码后用于个人以及私有公司的插件遇到bug, 发现瓶颈等时候
@@ -107,7 +115,16 @@ data是一个dict, 它是slack在回调的时候的请求, 一般情况下你只
 2. 如果其他插件都不符合, 会默认使用小黄鸡接口
 3. 本地调试可以使用这样的http请求:
 
+    ```
     http -f POST http://localhost:5000/slack_callback token=jLGMzrZn3P1lS2sD848KpPuN text='颐和园景点介绍' team_id=T0001 team_domain=example channel_id=C2147483705 channel_name=test timestamp=1355517523.000005 user_id=U2147483697 user_name=Steve trigger_word=''
+    ```
+
+4. 你也可以这样调试:
+
+    ```
+    $python manage.py send 今天天气很不错
+    !是啊是啊  好想出去玩
+    ```
 
 ### TODO
 
