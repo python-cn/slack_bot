@@ -2,10 +2,12 @@
 import os
 import re
 import random
+import shutil
 import calendar
 from datetime import datetime
 
 import pytz
+import requests
 from slacker import Slacker
 from pypinyin import lazy_pinyin
 
@@ -49,24 +51,34 @@ def to_pinyin(word):
 
 
 def chinese2digit(ch):
-    return ['一', '二', '三', '四', '五', '六', '七', '八', '九'].index(ch) + 1
+    try:
+        return ['一', '二', '三', '四', '五', '六', '七',
+                '八', '九'].index(ch) + 1
+    except ValueError:
+        return ch
 
 
-def upload_canvas_image(canvas, image_type, app=None, filename=None,
-                        tmp_dir=None, deleted=False):
+def upload_image(canvas_or_url, image_type, app=None, filename=None,
+                 tmp_dir=None, deleted=False):
     here = os.path.abspath(os.path.dirname(__file__))
     if tmp_dir is None:
         tmp_dir = os.path.join(here, 'data')
-    imgstr = CANVAS_REGEX.search(canvas).group(1)
-    if filename is None:
-        filename = os.path.join(tmp_dir, '{}.png'.format(imgstr[:20]))
-    output = open(filename, 'wb')
-    output.write(imgstr.decode('base64'))
-    output.close()
-    return upload_image(filename, image_type, app=app, deleted=deleted)
+    match = CANVAS_REGEX.search(canvas_or_url)
+    if match:
+        imgstr = match.group(1)
+        if filename is None:
+            filename = os.path.join(tmp_dir, '{}.png'.format(imgstr[:20]))
+        output = open(filename, 'wb')
+        output.write(imgstr.decode('base64'))
+        output.close()
+    else:
+        r = requests.get(canvas_or_url, stream=True)
+        if filename is None:
+            filename = canvas_or_url.rsplit('/', 1)[1]
+        with open(filename, 'wb') as f:
+            r.raw.decode_content = True
+            shutil.copyfileobj(r.raw, f)
 
-
-def upload_image(filename, image_type, app=None, deleted=False):
     if image_type == 'thumb':
         image_type = 'thumb_360'
     if app is None:
@@ -77,13 +89,16 @@ def upload_image(filename, image_type, app=None, deleted=False):
     ret = slack.files.upload(filename)
     if deleted:
         os.remove(filename)
-    return ret.body['file'][image_type]
+    try:
+        return ret.body['file'][image_type]
+    except KeyError:
+        return ret.body['file']['url']
 
 
 def check_canvas(image_url, app, image_type):
     match = CANVAS_REGEX.search(image_url)
     if match:
-        return upload_canvas_image(image_url, image_type, app=app)
+        return upload_image(image_url, image_type, app=app)
     else:
         return image_url
 

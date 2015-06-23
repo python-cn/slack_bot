@@ -91,12 +91,14 @@ def place_direction(ak, origin, destination, mode='transit', tactics=11,
         else:
             _origin = result.get('origin', [])
             _dest = result.get('destination', [])
-        o = ['{0}: {1}'.format(r['name'].encode('utf-8'),
-                               r['address'].encode('utf-8'))
-             for r in _origin]
-        d = ['{0}: {1}'.format(r['name'].encode('utf-8'),
-                               r['address'].encode('utf-8'))
-             for r in _dest]
+        o = ['{0}: {1}'.format(
+            r['name'].encode('utf-8') if r['name'] else '',
+            r['address'].encode('utf-8') if r['address'] else '')
+            for r in _origin]
+        d = ['{0}: {1}'.format(
+            r['name'].encode('utf-8') if r['name'] else '',
+            r['address'].encode('utf-8') if r['address'] else '')
+            for r in _dest]
         return (NODIRECTION, o, d)
     # 起终点明确
     if mode == 'driving':

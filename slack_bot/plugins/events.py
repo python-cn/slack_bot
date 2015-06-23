@@ -215,7 +215,7 @@ def get_events(city):
                 continue
             seg_lists.append(seg_)
             events.append(
-                u'<{0}|[1] {2}> {3} {4}'.format(
+                u'<{0}|[{1}] {2}> {3} {4}'.format(
                     url, org_name, title, time, others))
     return events
 

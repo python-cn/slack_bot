@@ -3,7 +3,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-from utils import to_pinyin, gen_attachment
+from utils import to_pinyin, gen_attachment, upload_image
 
 description = """
 最近上映的电影信息。触发条件:
@@ -17,7 +17,7 @@ CURRENT_URL = 'http://movie.douban.com/nowplaying/{0}/'
 LATER_URL = 'http://movie.douban.com/later/{0}/'
 
 
-def get_later_movie_info(city):
+def get_later_movie_info(city, app):
     r = requests.get(LATER_URL.format(city))
     soup = BeautifulSoup(r.text)
     items = soup.find(id='showing-soon').findAll('div', {'item'})
@@ -27,25 +27,32 @@ def get_later_movie_info(city):
         title = h.text
         content = '|'.join([li.text for li in i.findAll('li')[:4]])
         image_url = i.find('a').find('img').attrs.get('src', '')
+        # SA好变态, 感觉是防盗链了，下同
+        image_url = upload_image(image_url, 'thumb', app)
         yield u'<{url}|{title}> {content}'.format(**locals()), gen_attachment(
-            content, image_url.replace('spst', 'mpst'), image_type='thumb',
-            title=title, title_link=url)
+            content, image_url, image_type='thumb', title=title,
+            title_link=url)
 
 
-def get_current_movie_info(city):
+def get_current_movie_info(city, app):
     r = requests.get(CURRENT_URL.format(city))
     soup = BeautifulSoup(r.text)
     items = soup.find(id='nowplaying').find('ul', {'class': 'lists'}).findAll(
         'li', {'class': 'poster'})
+    count = 0
     for i in items:
+        if count >= 10:
+            continue
         img = i.find('img')
         title = img.attrs.get('alt', '')
         content = '|'.join([li.text for li in i.findAll('li')[:4]])
         url = i.find('a').attrs.get('href', '')
         image_url = img.attrs.get('src', '')
+        image_url = upload_image(image_url, 'thumb', app)
+        count += 1
         yield u'<{url}|{title}>'.format(**locals()), gen_attachment(
-            content, image_url.replace('spst', 'mpst'), image_type='thumb',
-            title=title, title_link=url)
+            content, image_url, image_type='thumb', title=title,
+            title_link=url)
 
 
 def test(data):
@@ -66,7 +73,7 @@ def handle(data, cache=None, app=None):
         fn = get_later_movie_info
     else:
         fn = get_current_movie_info
-    ret = [r for r in fn(city)]
+    ret = [r for r in fn(city, app)]
     return '\n'.join([r[0] for r in ret]), [r[1] for r in ret]
 
 
