@@ -157,7 +157,10 @@ def check_update(b):
 
 
 def _get_busline_info(busline):
-    return b.get_busline_info(busline)[0]['stations']
+    ret = b.get_busline_info(busline)
+    if ret:
+        return ret[0]['stations']
+    return ''
 
 
 def get_site_id_by_name(busline, name):
@@ -170,8 +173,10 @@ def get_site_id_by_name(busline, name):
 def get_busline_info(busline):
     check_update(b)
     stations = _get_busline_info(busline)
-    return '\n'.join([u'第{0}站: {1}'.format(s['no'], s['name'])
-                      for s in stations])
+    if stations:
+        return '\n'.join([u'第{0}站: {1}'.format(s['no'], s['name'])
+                          for s in stations])
+    return '查不到线路'
 
 
 def get_busline_realtime_info(busline, site):

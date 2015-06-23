@@ -73,7 +73,7 @@ def list_lastest_issues():
     ])
 
 
-def get_issue(num=None):
+def get_issue_pw(num=None):
     issues = list(get_all_issues())
     if num is None:
         num = len(issues)
@@ -91,11 +91,11 @@ def test(data):
 def handle(data, cache=None, app=None):
     msg = data['message'].split()
     if len(msg) == 1:
-        return check_cache(cache, get_issue)
+        return check_cache(cache, get_issue_pw)
     elif msg[1] == 'list':
         return check_cache(cache, list_lastest_issues)
     elif msg[1].isdigit():
-        return check_cache(cache, get_issue, int(msg[1]))
+        return check_cache(cache, get_issue_pw, int(msg[1]))
     return ('`pythonweekly`默认获得最近一次的weekly\n'
             '`pythonweekly list`获取最近20个weekly列表(找不到更早的了)\n'
             '`pythonweekly X`获得倒数第X次weekly(X不能超过20)')
