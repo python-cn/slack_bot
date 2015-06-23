@@ -1,5 +1,6 @@
 # coding=utf-8
 import os
+import re
 from functools import partial
 
 from flask import Flask
@@ -48,6 +49,8 @@ def callback(kwargs, app):
     s = kwargs['text']
     if isinstance(s, unicode):
         s = s.encode('utf-8')
+    # remove metion block
+    s = re.sub(r'(@.*)\W', '', s)
     private = True if 'private' in s or '私聊' in s else False
     attachmented = True if '带图' in s or '附件' in s else False
     data = {
