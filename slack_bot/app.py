@@ -51,8 +51,8 @@ def callback(kwargs, app):
         s = s.encode('utf-8')
     # remove metion block
     s = re.sub(r'(@.*)\W', '', s)
-    private = True if 'private' in s or '私聊' in s else False
-    attachmented = True if '带图' in s or '附件' in s else False
+    private = any([word in s for word in ['private', '私聊']])
+    attachmented = any([word in s for word in ['带图', '附件']])
     data = {
         'message': replaced(s, ['private', '私聊', '带图', '附件']).strip()
     }
