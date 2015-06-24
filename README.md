@@ -98,7 +98,7 @@ def test(data):
 
 
 ```python
-def handle(data):
+def handle(data, **kwargs):
     // your code
 ```
 
@@ -107,7 +107,7 @@ def handle(data):
 1. 返回只包含一个字符串表示不支持带图模式
 2. 返回一个(字符串, 一个attachment的列表), 每个attachment可以使用plugins/utils.py的gen_attachment生成
 
-data是一个dict, 它是slack在回调的时候的请求, 一般情况下你只需要关注`data['message']`这个`消息全文`字段.
+`data` 是一个dict, 它是slack在回调的时候的请求, 一般情况下你只需要关注`data['message']`这个`消息全文`字段.
 
 注意事项:
 

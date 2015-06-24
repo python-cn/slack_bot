@@ -88,7 +88,7 @@ def test(data):
     return all([i in data['message'] for i in ['python', 'weekly']])
 
 
-def handle(data, cache=None, app=None):
+def handle(data, cache=None, **kwargs):
     msg = data['message'].split()
     if len(msg) == 1:
         return check_cache(cache, get_issue_pw)

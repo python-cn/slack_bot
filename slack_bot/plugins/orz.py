@@ -42,7 +42,7 @@ def test(data):
     return False
 
 
-def handle(data, cache=None, app=None):
+def handle(data, **kwargs):
     mobai_icon = ':mb:'
     return mobai_icon * random.randrange(1, 10)
 

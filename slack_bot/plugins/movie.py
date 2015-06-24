@@ -60,7 +60,7 @@ def test(data):
         any([i in data['message'] for i in ['上映', '热映', '有什么', '将']])
 
 
-def handle(data, cache=None, app=None):
+def handle(data, app, **kwargs):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')

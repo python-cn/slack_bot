@@ -97,7 +97,7 @@ def test(data):
     return data['message'].startswith('v2ex')
 
 
-def handle(data, cache=None, app=None):
+def handle(data, cache=None, **kwargs):
     message = data['message']
     ids = fetch(cache=cache, force=(True if u'刷新' in message else False))
     contents = []

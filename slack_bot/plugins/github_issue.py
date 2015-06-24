@@ -15,7 +15,7 @@ def test(data):
     return 'issue' in data['message']
 
 
-def handle(data, cache, app):
+def handle(data, app, **kwargs):
     org_name = app.config.get('ORG_NAME', 'python-cn')
     repos = requests.get(REPO_API.format(org=org_name)).json()
     rv = ''

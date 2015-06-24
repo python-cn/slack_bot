@@ -41,7 +41,7 @@ def test(data):
     return '什么是' in data['message']
 
 
-def handle(data, cache, app):
+def handle(data, **kwargs):
     m = re.search('(?<=什么是)(.+?)(?=啊|那|呢|哈|！|。|？|\?|\s|\Z)', data['message'])
     if m and m.groups():
         return wikipedia(m.groups()[0])
