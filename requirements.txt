@@ -9,4 +9,4 @@ Flask-Script
 jieba
 pypinyin
 beautifulsoup4
-flask_slackbot==0.2.1
+flask-slackbot==0.2.1
