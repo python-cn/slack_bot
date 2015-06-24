@@ -3,7 +3,6 @@
 DEBUG = False
 SECRET_KEY = 'your secert key'
 
-SLACK_TOKEN = 'your slack token'
 SLACK_CHAT_TOKEN = 'your slack char token'
 SLACK_CALLBACK = 'your slack bot callback uri'
 REDIS_URL = 'redis://localhost:6379/0'
