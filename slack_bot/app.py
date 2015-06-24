@@ -50,7 +50,7 @@ def callback(kwargs, app):
     if isinstance(s, unicode):
         s = s.encode('utf-8')
     # remove metion block
-    s = re.sub(r'(@.*)\W', '', s)
+    s = re.sub(r'(@.*?)\W', '', s)
     private = any([word in s for word in ['private', '私聊']])
     attachmented = any([word in s for word in ['带图', '附件']])
     data = {
