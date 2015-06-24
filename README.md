@@ -1,4 +1,4 @@
-# slack_bot
+# slack\_bot
 立志成为一个可被调戏且有用的Bot
 
 ### 介绍
@@ -47,7 +47,7 @@ gunicorn wsgi:app localhost:5000 --timeout 240 --log-file -
 #### 技术活动插件 - 从segmentfault/csdn/车库咖啡/活动行获得最近的活动列表
 ![](screenshots/events.png)
 
-#### Github_issue插件 - 获得你个人或者组织下未处理的Pull requests列表
+#### Github\_issue插件 - 获得你个人或者组织下未处理的Pull requests列表
 ![](screenshots/issue.png)
 
 #### 电影信息插件 - 列出最近上映和即将上映的电影信息
@@ -105,13 +105,13 @@ def handle(data):
 `handle`方法则实际处理请求，它需要返回一个utf-8编码的字符串或者一个tuple，用来作为小黄鸡对这条请求的答复:
 
 1. 返回只包含一个字符串表示不支持带图模式
-2. 返回一个(字符串, 一个attachment的列表), 每个attachment可以使用plugins/utils.py的gen_attachment生成
+2. 返回一个(字符串, 一个attachment的列表), 每个attachment可以使用plugins/utils.py的 `gen_attachment` 生成
 
 data是一个dict, 它是slack在回调的时候的请求, 一般情况下你只需要关注`data['message']`这个`消息全文`字段.
 
 注意事项:
 
-1. 请把新的插件的名字也加在plugins/__init__.py的__all__里面
+1. 请把新的插件的名字也加在plugins/\_\_init\_\_.py的 `__all__` 里面
 2. 如果其他插件都不符合, 会默认使用小黄鸡接口
 3. 本地调试可以使用这样的http请求:
 
