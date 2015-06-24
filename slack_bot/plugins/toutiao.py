@@ -47,7 +47,7 @@ def test(data):
     return any(w in data['message'] for w in ['toutiao', '头条'])
 
 
-def handle(data, cache=None, app=None):
+def handle(data, **kwargs):
     msg = data['message'].split()
     channel = '推荐' if len(msg) == 1 else msg[1].strip()
     if channel not in CHANNEL_MAPS:

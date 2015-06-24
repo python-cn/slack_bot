@@ -110,7 +110,7 @@ def test(data):
                 for i in ['有什么美食', '大众点评', '附近美食']])
 
 
-def handle(data, cache=None, app=None):
+def handle(data, app=None, **kwargs):
     message = data['message']
     if app is None:
         appkey = '41502445'

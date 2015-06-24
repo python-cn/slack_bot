@@ -214,7 +214,7 @@ def test(data):
     return test_query_busline(message) or test_query_realtime(message)
 
 
-def handle(data, cache, app):
+def handle(data, **kwargs):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')

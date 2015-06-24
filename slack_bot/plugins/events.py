@@ -224,7 +224,7 @@ def test(data):
     return '最近有什么活动' in data['message']
 
 
-def handle(data, cache=None, app=None):
+def handle(data, cache=None, **kwargs):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')

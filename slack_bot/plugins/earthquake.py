@@ -56,7 +56,7 @@ def jw(a, b):
     return '，'.join((aa, bb))
 
 
-def handle(data, cache=None, app=None):
+def handle(data, **kwargs):
     r = urllib2.urlopen(
         'http://data.earthquake.cn/datashare/globeEarthquake_csn.html',
         timeout=5)

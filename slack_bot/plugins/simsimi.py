@@ -114,7 +114,7 @@ def test(data):
     return True
 
 
-def handle(data, cache, app):
+def handle(data, cache, **kwargs):
     return simsimi.chat(data['message']), None
 
 if __name__ == '__main__':

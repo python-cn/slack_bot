@@ -30,7 +30,7 @@ def test(data):
     return '天气' in data['message'] and get_city(data)
 
 
-def handle(data, cache=None, app=None):
+def handle(data, app=None, **kwargs):
     if app is None:
         ak = '18691b8e4206238f331ad2e1ca88357e'
     else:

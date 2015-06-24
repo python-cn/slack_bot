@@ -82,7 +82,7 @@ def get_desc(cityname, cityshort, cache=None, app=None):
     return text, attaches
 
 
-def handle(data, cache=None, app=None):
+def handle(data, cache=None, app=None, **kwargs):
     message = data['message']
     reqs = filter(lambda p: p[0].encode('utf-8') in message, city)
     req = reqs[0]

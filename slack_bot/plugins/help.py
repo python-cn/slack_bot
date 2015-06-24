@@ -20,7 +20,7 @@ def test(data):
     return 'help' in data['message']
 
 
-def handle(data, cache=None, app=None):
+def handle(data, app, **kwargs):
     plugin_modules = app.plugin_modules if app else []
     docs = []
     for plugin in plugin_modules:

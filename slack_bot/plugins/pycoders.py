@@ -119,7 +119,7 @@ def test(data):
     return 'pycoder' in data['message']
 
 
-def handle(data, cache=None, app=None):
+def handle(data, cache=None, **kwargs):
     msg = data['message'].split()
     if len(msg) == 1:
         return check_cache(cache, get_issue)
