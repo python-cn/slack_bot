@@ -47,6 +47,9 @@ def replaced(message, rep_words):
 
 def callback(kwargs, app):
     s = kwargs['text']
+    # remove trigger_words
+    if kwargs['trigger_word'] is not None:
+        s = replaced(s, kwargs['trigger_word'].split(','))
     if isinstance(s, unicode):
         s = s.encode('utf-8')
     # remove metion block

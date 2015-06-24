@@ -3,7 +3,6 @@
 DEBUG = True
 SECRET_KEY = 'o\xdd\x02I\x0b\xbbBP4\x97\xab\xe0GF\xfba\x14_\x03\xa9\xe8\xfa\xf8c'   # noqa
 
-SLACK_TOKEN = 'jLGMzrZn3P1lS2sD848KpPuN'
 SLACK_CHAT_TOKEN = 'xoxp-4231087425-4231087427-4463321974-03a74a'
 SLACK_CALLBACK = '/slack_callback'
 REDIS_URL = 'redis://:password@localhost:6379/0'
