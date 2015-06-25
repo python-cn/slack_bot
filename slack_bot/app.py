@@ -10,6 +10,7 @@ from flask_slackbot import SlackBot
 import settings
 import plugins
 from ext import redis_store, cache
+from plugins.utils import convert2str, replaced
 
 
 plugin_modules = []
@@ -39,19 +40,12 @@ def create_app(config=None):
     return app
 
 
-def replaced(message, rep_words):
-    for word in rep_words:
-        message = message.replace(word, '', 1)
-    return message
-
-
 def callback(kwargs, app):
-    s = kwargs['text']
+    s = convert2str(kwargs['text'])
+    trigger_word = convert2str(kwargs['trigger_word'])
     # remove trigger_words
-    if kwargs['trigger_word'] is not None:
-        s = replaced(s, kwargs['trigger_word'].split(','))
-    if isinstance(s, unicode):
-        s = s.encode('utf-8')
+    if trigger_word is not None:
+        s = replaced(s, trigger_word.split(','))
     # remove metion block
     s = re.sub(r'(@.*?)\W', '', s)
     private = any([word in s for word in ['private', '私聊']])
@@ -71,7 +65,8 @@ def callback(kwargs, app):
                 attaches = None
             else:
                 text, attaches = ret
-            text = '!' + text
+            if trigger_word is None:
+                text = '!' + text
             if attachmented and attaches:
                 return {'text': ' ', 'private': private,
                         'attachments': attaches}
