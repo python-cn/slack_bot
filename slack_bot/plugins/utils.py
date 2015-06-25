@@ -109,6 +109,12 @@ def convert2unicode(s):
     return s
 
 
+def convert2str(s):
+    if isinstance(s, unicode):
+        return s.encode('utf-8')
+    return s
+
+
 def gen_attachment(text, image_url='', image_type='url', app=None, title='',
                    title_link='', color='random', fallback=True):
     if color == 'random':
@@ -130,3 +136,9 @@ def trunc_utf8(s, length=50):
     if s > length:
         s = s[:length] + '...'
     return s
+
+
+def replaced(message, rep_words):
+    for word in rep_words:
+        message = message.replace(word, '', 1)
+    return message
