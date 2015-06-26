@@ -1,4 +1,4 @@
-#-*-coding:utf-8-*-
+# -*-coding:utf-8-*-
 
 """
 Copyright (c) 2012 wong2 <wonderfuly@gmail.com>
@@ -49,6 +49,19 @@ description = """
 色色的小黄鸡。触发条件：所有未触发其他插件的内容。
 """
 
+COOKIE = """
+sid=s%3AcsxS39Tq1oLXQj5WKdBN7UZz.T%2FdtU%2BGkt056rKQb
+%2BwmwD0iJXguRCsyRsv6745ftwfk; Filtering=0.0; Filtering=0.0;
+isFirst=1; isFirst=1; simsimi_uid=102256985; simsimi_uid=102256985;
+selected_nc_name=Chinese%20%u2013%20Simplified%20%28%u7C21%u9AD4%29;
+selected_nc_name=Chinese%20%u2013%20Simplified%20%28%u7C21%u9AD4%29;
+simsimi_makeup=undefined; simsimi_makeup=undefined; selected_nc=ch;
+selected_nc=ch; __utmt=1; __utma=119922954.1015526052.1433822720.
+1433826650.1433836017.4; __utmb=119922954.8.9.1433836034315;
+__utmc=119922954; __utmz=119922954.1433822720.1.1.utmcsr=(direct)
+|utmccn=(direct)|utmcmd=(none)
+"""
+
 
 class SimSimi:
 
@@ -56,15 +69,22 @@ class SimSimi:
 
         self.session = requests.Session()
 
-        self.chat_url = 'http://www.simsimi.com/func/reqN?lc=ch&ft=0.0&req={0}&fl=http%3A%2F%2Fwww.simsimi.com%2Ftalk.htm&reqType='
-        self.api_url = 'http://sandbox.api.simsimi.com/request.p?key=%s&lc=ch&ft=1.0&text=%s'
+        self.chat_url = (
+            'http://www.simsimi.com/func/reqN?lc=ch&ft=0.0&req={0}'
+            '&fl=http%3A%2F%2Fwww.simsimi.com%2Ftalk.htm&reqType='
+        )
+        self.api_url = ('http://sandbox.api.simsimi.com/request.p?'
+                        'key=%s&lc=ch&ft=1.0&text=%s')
 
         if not SIMSIMI_KEY:
             self.initSimSimiCookie()
 
     def initSimSimiCookie(self):
         self.session.headers.update(
-            {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36'})
+            {'User-Agent': ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)'
+                            ' AppleWebKit/537.36 (KHTML, like Gecko)'
+                            ' Chrome/43.0.2357.81 Safari/537.36')}
+        )
         self.session.get('http://www.simsimi.com/talk.htm')
         self.session.headers.update(
             {'Referer': 'http://www.simsimi.com/talk.htm'})
@@ -84,7 +104,7 @@ class SimSimi:
         self.session.headers.update({'Pragma': 'no-cache'})
         self.session.headers.update({'X-Requested-With': 'XMLHttpRequest'})
         self.session.headers.update(
-            {'Cookie': 'sid=s%3AcsxS39Tq1oLXQj5WKdBN7UZz.T%2FdtU%2BGkt056rKQb%2BwmwD0iJXguRCsyRsv6745ftwfk; Filtering=0.0; Filtering=0.0; isFirst=1; isFirst=1; simsimi_uid=102256985; simsimi_uid=102256985; selected_nc_name=Chinese%20%u2013%20Simplified%20%28%u7C21%u9AD4%29; selected_nc_name=Chinese%20%u2013%20Simplified%20%28%u7C21%u9AD4%29; simsimi_makeup=undefined; simsimi_makeup=undefined; selected_nc=ch; selected_nc=ch; __utmt=1; __utma=119922954.1015526052.1433822720.1433826650.1433836017.4; __utmb=119922954.8.9.1433836034315; __utmc=119922954; __utmz=119922954.1433822720.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)'})
+            {'Cookie': COOKIE})
 
     def getSimSimiResult(self, message, method='normal'):
         if method == 'normal':
