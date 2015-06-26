@@ -15,6 +15,7 @@ description = """
 * 上海天气
 """
 
+DAY = {0: u'今天', 1: u'明天', 2: u'后天'}
 TEMPERATURE_REGEX = re.compile(ur'(\d+)℃')
 
 
@@ -38,15 +39,20 @@ def handle(data, app=None, **kwargs):
     city = get_city(data)
     if not city:
         return '不会自己去看天气预报啊'
-    res = weather(ak, city)[0]
-    current = TEMPERATURE_REGEX.search(res['date']).groups()[0]
-    text = u'当前: {0} {1} {2} 温度: {3}'.format(
-        current, res['weather'], res['wind'], res['temperature'])
-    type = 'dayPictureUrl' if check_time() == 'day' else 'dayPictureUrl'
-    attaches = [gen_attachment(text, res[type], image_type='thumb',
-                               title=u'{}天气预报'.format(city),
-                               title_link='')]
-    return text, attaches
+    res = weather(ak, city)[:3]
+    ret = []
+    attaches = []
+    for idx, day in enumerate(res):
+        current = TEMPERATURE_REGEX.search(day['date']).groups()[0]
+        text = u'{0}: {1} {2} {3} 温度: {4}'.format(
+            DAY[idx], current, day['weather'],
+            day['wind'], day['temperature'])
+        ret.append(text)
+        type = 'dayPictureUrl' if check_time() == 'day' else 'dayPictureUrl'
+        attaches.append(gen_attachment(text, day[type], image_type='thumb',
+                                       title=u'{}天气预报'.format(city),
+                                       title_link=''))
+    return '\n'.join(ret), attaches
 
 
 if __name__ == '__main__':
