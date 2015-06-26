@@ -78,5 +78,5 @@ def handle(data, app, **kwargs):
 
 
 if __name__ == '__main__':
-    print handle({'message': '最近要将上映的电影'}, None, None)
-    print handle({'message': '有什么电影 上海'}, None, None)
+    print handle({'message': '最近要将上映的电影'}, None)
+    print handle({'message': '有什么电影 上海'}, None)
