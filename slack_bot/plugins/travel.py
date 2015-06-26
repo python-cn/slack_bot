@@ -34,8 +34,8 @@ def get_itinerary(res, details=False):
         text.append(u'类型: {0}: {1}'.format(i['name'], i['description']))
         for index, it in enumerate(i['itineraries'], 1):
             text.append(
-                u'第{}天  '.format(index) + u' ->'.join([p['name']
-                                                         for p in it['path']]))
+                u'第{}天  '.format(index) + u' ->'.join(
+                    [p['name'] for p in it['path']]))
             for t in ['description', 'dinning', 'accommodation']:
                 text.append(it[t])
         text.append('\n')

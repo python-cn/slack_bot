@@ -55,22 +55,22 @@ class DianpingApi(object):
 
     def get_business_info(self, business, details=False):
         url = business['business_url']  # 商户页面URL链接
-        id = business['business_id']
+        # id = business['business_id']
         distance = business['distance']  # 商户与参数坐标的距离，单位为米
-        coupon_description = business['coupon_description']  # 优惠券描述
-        deals_description = ','.join([
-            c['description'] for c in business['deals']])  # 团购描述
+        # coupon_description = business['coupon_description']  # 优惠券描述
+        # deals_description = ','.join([
+        #     c['description'] for c in business['deals']])  # 团购描述
         name = real_name(business['name'])  # 商户名
-        branch_name = business['branch_name']  # 分店名
+        # branch_name = business['branch_name']  # 分店名
         address = business['address']  # 地址
         telephone = business['telephone']  # 电话
-        avg_rating = business['avg_rating']  # 星级评分，5.0代表五星，4.5代表四星半，依此类推 noqa
+        # avg_rating = business['avg_rating']  # 星级评分，5.0代表五星，4.5代表四星半，依此类推
         photo_url = business['photo_url']
         if details:
             product_grade = business['product_grade']  # noqa 产品/食品口味评价，1:一般，2:尚可，3:好，4:很好，5:非常好
-            decoration_grade = business['decoration_grade']  # 环境评价 同上
-            service_grade = business['service_grade']  # 服务评价 同上
-            avg_price = business['avg_price']  # 均价格，单位:元，若没有人均，返回-1
+            # decoration_grade = business['decoration_grade']  # 环境评价 同上
+            # service_grade = business['service_grade']  # 服务评价 同上
+            # avg_price = business['avg_price']  # 均价格，单位:元，若没有人均，返回-1
         text = u'<{0}|{1}> {2} {3} 距离: {4} '.format(
             url, name, address, telephone, distance)
         attach = gen_attachment(

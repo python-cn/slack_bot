@@ -14,6 +14,12 @@ description = """
 * 公交 571 18
 """
 
+URL1 = u'/aiguang/bjgj.c?m=checkUpdate&version=1'
+URL2 = u'/aiguang/bjgj.c?m=update&id={0}'
+URL3 = (u'/bus.php?city=%E5%8C%97%E4%BA%AC&id={0}'
+        u'&no={1}&type={2}&encrypt={3}&versionid=2')
+URL4 = u'http://bjgj.aibang.com:8899'
+
 
 # https://github.com/andelf/beijing-realtime-bus/blob/master/bjgj.py
 class Cipher(object):
@@ -54,7 +60,6 @@ class Cipher(object):
                 j = (255L & (j + trans_table[k]))
                 [trans_table[j], trans_table[k]] = [
                     trans_table[k], trans_table[j]]
-                [trans_table[j], trans_table[k]]
                 n = (255L & (trans_table[k] + trans_table[j]))
                 ret_val[i] = (raw_bytes[i] ^ trans_table[n])
                 ret_val[i]
@@ -75,8 +80,12 @@ def decrypt_busline_etree(et):
         stations = xpath_etree_children_to_dict_list(
             u'//busline/stations/station', et)
         cipher = Cipher.new_from_key(busline[u'lineid'])
-        busline = dict(*[busline], **{k: cipher.decrypt(v).decode(u'utf-8') for (
-            k, v) in busline.items() if (k in [u'shotname', u'coord', u'linename'])})
+        busline = dict(
+            *[busline],
+            **{k: cipher.decrypt(v).decode(u'utf-8')
+                for (k, v) in busline.items()
+                if (k in [u'shotname', u'coord', u'linename'])}
+        )
 
         def _hy_anon_fn_9():
             f_1236 = (lambda it: {k: cipher.decrypt(v).decode(
@@ -93,7 +102,13 @@ def decrypt_bus_realtime_info(bus):
 
     def _hy_anon_fn_12():
         cipher = Cipher.new_from_key(bus[u'gt'])
-        return dict(*[bus], **{k: cipher.decrypt(v).decode(u'utf-8') for (k, v) in bus.items() if (k in [u'ns', u'nsn', u'sd', u'srt', u'st', u'x', u'y'])})
+        return dict(
+            *[bus],
+            **{k: cipher.decrypt(v).decode(u'utf-8')
+                for (k, v) in bus.items()
+                if (k in [u'ns', u'nsn', u'sd',
+                          u'srt', u'st', u'x', u'y'])}
+        )
     return _hy_anon_fn_12()
 
 
@@ -117,8 +132,17 @@ class BeijingBusApi(object):
     def __init__(self):
         self.opener = urllib2.build_opener()
         self.uid = u'233333333333333333333333333333333333333'
-        self.opener.addheaders = [(u'SOURCE', u'1'), (u'PKG_SOURCE', u'1'), (u'OS', u'android'), (u'ROM', u'4.2.1'), (u'RESOLUTION', u'1280*720'), (u'MANUFACTURER', u'2013022'), (u'MODEL', u'2013022'), (u'UA', u'2013022,17,4.2.1,HBJ2.0,Unknown,1280*720'),
-                                  (u'IMSI', u'233333333333333'), (u'IMEI', u'233333333333333'), (u'UID', self.uid), (u'CID', self.uid), (u'PRODUCT', u'nextbus'), (u'PLATFORM', u'android'), (u'VERSION', u'1.0.5'), (u'FIRST_VERSION', u'2'), (u'PRODUCTID', u'5'), (u'VERSIONID', u'2'), (u'CUSTOM', u'aibang')]
+        self.opener.addheaders = [
+            (u'SOURCE', u'1'), (u'PKG_SOURCE', u'1'), (u'OS', u'android'),
+            (u'ROM', u'4.2.1'), (u'RESOLUTION', u'1280*720'),
+            (u'MANUFACTURER', u'2013022'), (u'MODEL', u'2013022'),
+            (u'UA', u'2013022,17,4.2.1,HBJ2.0,Unknown,1280*720'),
+            (u'IMSI', u'233333333333333'), (u'IMEI', u'233333333333333'),
+            (u'UID', self.uid), (u'CID', self.uid), (u'PRODUCT', u'nextbus'),
+            (u'PLATFORM', u'android'), (u'VERSION', u'1.0.5'),
+            (u'FIRST_VERSION', u'2'), (u'PRODUCTID', u'5'),
+            (u'VERSIONID', u'2'), (u'CUSTOM', u'aibang')
+        ]
         self.updated_time = date.today()
 
     def api_open(self, path, url_base=u'http://mc.aibang.com'):
@@ -128,20 +152,29 @@ class BeijingBusApi(object):
 
         def _hy_anon_fn_19():
             f_1240 = (lambda it: {k: int(v) for (k, v) in it.items()})
-            for v_1239 in xpath_etree_children_to_dict_list(u'//line', ET.fromstring(self.api_open(u'/aiguang/bjgj.c?m=checkUpdate&version=1'))):
+            for v_1239 in xpath_etree_children_to_dict_list(
+                u'//line',
+                ET.fromstring(self.api_open(URL1))
+            ):
                 yield f_1240(v_1239)
         return list(_hy_anon_fn_19())
 
     def get_busline_info(self, id, *ids):
-        buslines = ET.fromstring(self.api_open(
-            u'/aiguang/bjgj.c?m=update&id={0}'.format(u'%2C'.join(map(str, ([id] + list(ids))))))).xpath(u'//busline')
+        buslines = ET.fromstring(
+            self.api_open(
+                URL2.format(u'%2C'.join(map(str, ([id] + list(ids))))))
+            ).xpath(u'//busline')
         return list(map(decrypt_busline_etree, buslines))
 
     def get_busline_realtime_info(self, id, no):
 
         def _hy_anon_fn_22():
             f_1242 = (lambda it: decrypt_bus_realtime_info(it))
-            for v_1241 in etree_xpath_children_to_dict_list(ET.fromstring(self.api_open(u'/bus.php?city=%E5%8C%97%E4%BA%AC&id={0}&no={1}&type={2}&encrypt={3}&versionid=2'.format(id, no, 2L, 1L), u'http://bjgj.aibang.com:8899')), u'//data/bus'):
+            for v_1241 in etree_xpath_children_to_dict_list(
+                ET.fromstring(
+                    self.api_open(URL3.format(id, no, 2L, 1L), URL4)),
+                u'//data/bus'
+            ):
                 yield f_1242(v_1241)
         return list(_hy_anon_fn_22())
 # end
