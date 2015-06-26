@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from flask import current_app
 import requests
 
 description = """
@@ -15,7 +16,8 @@ def test(data):
     return 'issue' in data['message']
 
 
-def handle(data, app, **kwargs):
+def handle(data, **kwargs):
+    app = current_app
     org_name = app.config.get('ORG_NAME', 'python-cn')
     repos = requests.get(REPO_API.format(org=org_name)).json()
     rv = ''
@@ -39,4 +41,4 @@ if __name__ == '__main__':
     from flask import Flask
     app = Flask(__name__)
     app.config['org_name'] = 'python-cn'
-    print handle(None, None, app)
+    print handle(None, None)

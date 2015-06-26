@@ -122,4 +122,4 @@ if __name__ == '__main__':
     cache = Cache()
     cache.init_app(app, config={'CACHE_TYPE': 'simple'})
     with app.app_context():
-        print handle({'message': 'v2ex'}, cache, app)
+        print handle({'message': 'v2ex'}, cache)

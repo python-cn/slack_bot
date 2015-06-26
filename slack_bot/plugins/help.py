@@ -1,4 +1,5 @@
 # coding=utf-8
+from flask import current_app
 
 description = """
 帮助信息，触发条件: "help [私聊]". 比如:
@@ -20,7 +21,8 @@ def test(data):
     return 'help' in data['message']
 
 
-def handle(data, app, **kwargs):
+def handle(data, **kwargs):
+    app = current_app
     plugin_modules = app.plugin_modules if app else []
     docs = []
     for plugin in plugin_modules:

@@ -1,5 +1,6 @@
 # coding=utf-8
 
+from flask import current_app
 import requests
 from bs4 import BeautifulSoup
 
@@ -17,7 +18,7 @@ CURRENT_URL = 'http://movie.douban.com/nowplaying/{0}/'
 LATER_URL = 'http://movie.douban.com/later/{0}/'
 
 
-def get_later_movie_info(city, app):
+def get_later_movie_info(city):
     r = requests.get(LATER_URL.format(city))
     soup = BeautifulSoup(r.text)
     items = soup.find(id='showing-soon').findAll('div', {'item'})
@@ -28,13 +29,13 @@ def get_later_movie_info(city, app):
         content = '|'.join([li.text for li in i.findAll('li')[:4]])
         image_url = i.find('a').find('img').attrs.get('src', '')
         # SA好变态, 感觉是防盗链了，下同
-        image_url = upload_image(image_url, 'thumb', app)
+        image_url = upload_image(image_url, 'thumb')
         yield u'<{url}|{title}> {content}'.format(**locals()), gen_attachment(
             content, image_url, image_type='thumb', title=title,
             title_link=url)
 
 
-def get_current_movie_info(city, app):
+def get_current_movie_info(city):
     r = requests.get(CURRENT_URL.format(city))
     soup = BeautifulSoup(r.text)
     items = soup.find(id='nowplaying').find('ul', {'class': 'lists'}).findAll(
@@ -48,7 +49,7 @@ def get_current_movie_info(city, app):
         content = '|'.join([li.text for li in i.findAll('li')[:4]])
         url = i.find('a').attrs.get('href', '')
         image_url = img.attrs.get('src', '')
-        image_url = upload_image(image_url, 'thumb', app)
+        image_url = upload_image(image_url, 'thumb')
         count += 1
         yield u'<{url}|{title}>'.format(**locals()), gen_attachment(
             content, image_url, image_type='thumb', title=title,
@@ -60,7 +61,8 @@ def test(data):
         any([i in data['message'] for i in ['上映', '热映', '有什么', '将']])
 
 
-def handle(data, app, **kwargs):
+def handle(data, **kwargs):
+    app = current_app
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')

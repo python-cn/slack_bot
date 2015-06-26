@@ -1,7 +1,6 @@
 # coding=utf-8
 import os
 import re
-from functools import partial
 
 from flask import Flask
 
@@ -34,15 +33,14 @@ def create_app(config=None):
     app.plugin_modules = plugin_modules
 
     slackbot = SlackBot(app)
-    _callback = partial(callback, app=app)
-    slackbot.set_handler(_callback)
+    slackbot.set_handler(callback)
     slackbot.filter_outgoing(_filter)
 
     return app
 
 
 @timeout(30.0)
-def callback(kwargs, app):
+def callback(kwargs):
     s = convert2str(kwargs['text'])
     trigger_word = convert2str(kwargs['trigger_word'])
     # remove trigger_words
@@ -61,7 +59,7 @@ def callback(kwargs, app):
 
     for plugin_module in plugin_modules:
         if plugin_module.test(data):
-            ret = plugin_module.handle(data, cache=cache, app=app)
+            ret = plugin_module.handle(data, cache=cache)
             if not isinstance(ret, tuple):
                 text = ret
                 attaches = None

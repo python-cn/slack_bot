@@ -6,6 +6,7 @@ import re
 import cPickle as pickle
 from datetime import datetime
 
+from flask import current_app
 import requests
 
 from utils import to_pinyin
@@ -193,7 +194,8 @@ def test(data):
     return REGEX.search(message)
 
 
-def handle(data, cache, app, **kwargs):
+def handle(data, cache, **kwargs):
+    app = current_app
     if app is None:
         ak = '18691b8e4206238f331ad2e1ca88357e'
     else:

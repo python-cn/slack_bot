@@ -5,6 +5,8 @@ import os
 import re
 import cPickle as pickle
 
+from flask import current_app
+
 from baidumap import weather
 from utils import gen_attachment, check_time
 
@@ -31,7 +33,8 @@ def test(data):
     return '天气' in data['message'] and get_city(data)
 
 
-def handle(data, app=None, **kwargs):
+def handle(data, **kwargs):
+    app = current_app
     if app is None:
         ak = '18691b8e4206238f331ad2e1ca88357e'
     else:

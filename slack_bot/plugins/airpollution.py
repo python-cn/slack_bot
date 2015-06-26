@@ -52,7 +52,7 @@ def test(data):
     return len(req) > 0
 
 
-def get_desc(cityname, cityshort, cache=None, app=None):
+def get_desc(cityname, cityshort, cache=None):
     if cache is not None:
         r = cache.get('airpollution.%s' % (cityshort))
         if r:
@@ -77,17 +77,17 @@ def get_desc(cityname, cityshort, cache=None, app=None):
     image_url = soup.find(id='tr_pm25').find(id='td_pm25').find(
         'img').attrs.get('src')
     title = soup.find('title').text
-    attaches = [gen_attachment(text, image_url, app=app, title=title,
+    attaches = [gen_attachment(text, image_url, title=title,
                                title_link=title_link)]
     return text, attaches
 
 
-def handle(data, cache=None, app=None, **kwargs):
+def handle(data, cache=None, **kwargs):
     message = data['message']
     reqs = filter(lambda p: p[0].encode('utf-8') in message, city)
     req = reqs[0]
     try:
-        return get_desc(req[0], req[1], cache, app=app)
+        return get_desc(req[0], req[1], cache)
     except Exception as e:
         print 'Error: {}'.format(e)
     return '空气查询失败, 请重试!', []
