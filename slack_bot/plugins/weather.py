@@ -43,10 +43,15 @@ def handle(data, app=None, **kwargs):
     ret = []
     attaches = []
     for idx, day in enumerate(res):
-        current = TEMPERATURE_REGEX.search(day['date']).groups()[0]
-        text = u'{0}: {1} {2} {3} 温度: {4}'.format(
-            DAY[idx], current, day['weather'],
-            day['wind'], day['temperature'])
+        if idx == 0:
+            current = TEMPERATURE_REGEX.search(day['date']).groups()[0]
+            text = u'{0}: {1} {2} {3} 温度: {4}'.format(
+                DAY[idx], current, day['weather'],
+                day['wind'], day['temperature'])
+        else:
+            text = u'{0}: {1} {2} 温度: {3}'.format(
+                DAY[idx], day['weather'],
+                day['wind'], day['temperature'])
         ret.append(text)
         type = 'dayPictureUrl' if check_time() == 'day' else 'dayPictureUrl'
         attaches.append(gen_attachment(text, day[type], image_type='thumb',
