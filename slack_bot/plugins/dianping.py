@@ -111,7 +111,7 @@ def test(data):
                 for i in ['有什么美食', '大众点评', '附近美食']])
 
 
-def handle(data, **kwargs):
+def handle(data):
     app = current_app
     message = data['message']
     if app is None:

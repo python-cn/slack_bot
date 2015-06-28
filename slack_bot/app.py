@@ -59,7 +59,7 @@ def callback(kwargs):
 
     for plugin_module in plugin_modules:
         if plugin_module.test(data):
-            ret = plugin_module.handle(data, cache=cache)
+            ret = plugin_module.handle(data)
             if not isinstance(ret, tuple):
                 text = ret
                 attaches = None

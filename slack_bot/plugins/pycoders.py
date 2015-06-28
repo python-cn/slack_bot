@@ -5,6 +5,7 @@ from HTMLParser import HTMLParser
 import requests
 from bs4 import BeautifulSoup
 
+from slack_bot.ext import cache
 from utils import check_cache
 
 description = """
@@ -119,7 +120,7 @@ def test(data):
     return 'pycoder' in data['message']
 
 
-def handle(data, cache=None, **kwargs):
+def handle(data):
     msg = data['message'].split()
     if len(msg) == 1:
         return check_cache(cache, get_issue)
@@ -133,6 +134,6 @@ def handle(data, cache=None, **kwargs):
 
 
 if __name__ == '__main__':
-    print handle({'message': 'pycoder'}, None, None, None)
-    print handle({'message': 'pycoder list'}, None, None, None)
-    print handle({'message': 'pycoder 167'}, None, None, None)
+    print handle({'message': 'pycoder'})
+    print handle({'message': 'pycoder list'})
+    print handle({'message': 'pycoder 167'})

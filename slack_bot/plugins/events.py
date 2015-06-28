@@ -6,6 +6,7 @@ import jieba
 import requests
 from bs4 import BeautifulSoup
 
+from slack_bot.ext import cache
 from utils import check_cache
 
 description = """
@@ -224,7 +225,7 @@ def test(data):
     return '最近有什么活动' in data['message']
 
 
-def handle(data, cache=None, **kwargs):
+def handle(data):
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')
@@ -237,5 +238,5 @@ def handle(data, cache=None, **kwargs):
 
 
 if __name__ == '__main__':
-    print handle({'message': '最近有什么活动'}, None, None)
-    print handle({'message': '最近有什么活动 上海'}, None, None)
+    print handle({'message': '最近有什么活动'})
+    print handle({'message': '最近有什么活动 上海'})

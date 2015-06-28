@@ -29,6 +29,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
+from slack_bot.ext import cache
 from utils import gen_attachment
 
 description = """
@@ -52,7 +53,7 @@ def test(data):
     return len(req) > 0
 
 
-def get_desc(cityname, cityshort, cache=None):
+def get_desc(cityname, cityshort):
     if cache is not None:
         r = cache.get('airpollution.%s' % (cityshort))
         if r:
@@ -82,16 +83,16 @@ def get_desc(cityname, cityshort, cache=None):
     return text, attaches
 
 
-def handle(data, cache=None, **kwargs):
+def handle(data):
     message = data['message']
     reqs = filter(lambda p: p[0].encode('utf-8') in message, city)
     req = reqs[0]
     try:
-        return get_desc(req[0], req[1], cache)
+        return get_desc(req[0], req[1])
     except Exception as e:
         print 'Error: {}'.format(e)
     return '空气查询失败, 请重试!', []
 
 
 if __name__ == '__main__':
-    print handle({'message': '北京空气'}, None)
+    print handle({'message': '北京空气'})

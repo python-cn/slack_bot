@@ -61,7 +61,7 @@ def test(data):
         any([i in data['message'] for i in ['上映', '热映', '有什么', '将']])
 
 
-def handle(data, **kwargs):
+def handle(data):
     app = current_app
     message = data['message']
     if not isinstance(message, unicode):
@@ -80,5 +80,5 @@ def handle(data, **kwargs):
 
 
 if __name__ == '__main__':
-    print handle({'message': '最近要将上映的电影'}, None)
-    print handle({'message': '有什么电影 上海'}, None)
+    print handle({'message': '最近要将上映的电影'})
+    print handle({'message': '有什么电影 上海'})

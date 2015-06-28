@@ -4,6 +4,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+from slack_bot.ext import cache
 from utils import check_cache
 from pycoders import MyHTMLParser
 
@@ -88,7 +89,7 @@ def test(data):
     return all([i in data['message'] for i in ['python', 'weekly']])
 
 
-def handle(data, cache=None, **kwargs):
+def handle(data):
     msg = data['message'].split()
     if len(msg) == 1:
         return check_cache(cache, get_issue_pw)
@@ -102,6 +103,6 @@ def handle(data, cache=None, **kwargs):
 
 
 if __name__ == '__main__':
-    print handle({'message': 'pythonweekly'}, None, None, None)
-    print handle({'message': 'pythonweekly list'}, None, None, None)
-    print handle({'message': 'pythonweekly 1'}, None, None, None)
+    print handle({'message': 'pythonweekly'})
+    print handle({'message': 'pythonweekly list'})
+    print handle({'message': 'pythonweekly 1'})

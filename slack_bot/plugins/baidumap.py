@@ -194,7 +194,7 @@ def test(data):
     return REGEX.search(message)
 
 
-def handle(data, cache, **kwargs):
+def handle(data):
     app = current_app
     if app is None:
         ak = '18691b8e4206238f331ad2e1ca88357e'
@@ -241,9 +241,9 @@ def handle(data, cache, **kwargs):
 
 
 if __name__ == '__main__':
-    print handle({'message': '我想从兆维工业园到北京南站'}, None, None)
-    print handle({'message': '我想从人大到北京南站'}, None, None)
-    print handle({'message': '我想从人大到豆瓣'}, None, None)
-    print handle({'message': '我想从兆维工业园到北京南站 步行'}, None, None)
-    print handle({'message': '我想从兆维工业园到北京南站 开车'}, None, None)
-    print handle({'message': '从酒仙桥去798'}, None, None)
+    print handle({'message': '我想从兆维工业园到北京南站'})
+    print handle({'message': '我想从人大到北京南站'})
+    print handle({'message': '我想从人大到豆瓣'})
+    print handle({'message': '我想从兆维工业园到北京南站 步行'})
+    print handle({'message': '我想从兆维工业园到北京南站 开车'})
+    print handle({'message': '从酒仙桥去798'})

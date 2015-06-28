@@ -16,7 +16,7 @@ def test(data):
     return 'issue' in data['message']
 
 
-def handle(data, **kwargs):
+def handle(data):
     app = current_app
     org_name = app.config.get('ORG_NAME', 'python-cn')
     repos = requests.get(REPO_API.format(org=org_name)).json()
@@ -41,4 +41,4 @@ if __name__ == '__main__':
     from flask import Flask
     app = Flask(__name__)
     app.config['org_name'] = 'python-cn'
-    print handle(None, None)
+    print handle(None)
