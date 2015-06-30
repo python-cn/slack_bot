@@ -10,6 +10,7 @@ from flask_slackbot import SlackBot
 import settings
 import plugins
 from ext import redis_store, cache
+from utils import timeout
 from plugins.utils import convert2str, replaced
 
 
@@ -40,6 +41,7 @@ def create_app(config=None):
     return app
 
 
+@timeout(30.0)
 def callback(kwargs, app):
     s = convert2str(kwargs['text'])
     trigger_word = convert2str(kwargs['trigger_word'])
