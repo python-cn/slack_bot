@@ -6,7 +6,7 @@ import re
 import cPickle as pickle
 from datetime import datetime
 
-from flask import current_app
+from flask import current_app as app
 import requests
 
 from utils import to_pinyin
@@ -195,7 +195,6 @@ def test(data):
 
 
 def handle(data):
-    app = current_app
     if app is None:
         ak = '18691b8e4206238f331ad2e1ca88357e'
     else:

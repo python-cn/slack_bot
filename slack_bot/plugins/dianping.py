@@ -3,7 +3,7 @@ import re
 import hashlib
 from functools import partial
 
-from flask import current_app
+from flask import current_app as app
 import requests
 
 from baidumap import address2geo
@@ -112,7 +112,6 @@ def test(data):
 
 
 def handle(data):
-    app = current_app
     message = data['message']
     if app is None:
         appkey = '41502445'

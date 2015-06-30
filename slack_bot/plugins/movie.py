@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from flask import current_app
+from flask import current_app as app
 import requests
 from bs4 import BeautifulSoup
 
@@ -62,7 +62,6 @@ def test(data):
 
 
 def handle(data):
-    app = current_app
     message = data['message']
     if not isinstance(message, unicode):
         message = message.decode('utf-8')

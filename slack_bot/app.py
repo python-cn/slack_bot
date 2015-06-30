@@ -30,6 +30,7 @@ def create_app(config=None):
 
     redis_store.init_app(app)
     cache.init_app(app)
+    app.cache = cache
     app.plugin_modules = plugin_modules
 
     slackbot = SlackBot(app)

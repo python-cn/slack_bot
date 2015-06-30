@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import current_app
+from flask import current_app as app
 import requests
 
 description = """
@@ -17,7 +17,6 @@ def test(data):
 
 
 def handle(data):
-    app = current_app
     org_name = app.config.get('ORG_NAME', 'python-cn')
     repos = requests.get(REPO_API.format(org=org_name)).json()
     rv = ''
