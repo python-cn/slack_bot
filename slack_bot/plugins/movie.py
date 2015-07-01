@@ -4,7 +4,8 @@ from flask import current_app as app
 import requests
 from bs4 import BeautifulSoup
 
-from utils import to_pinyin, gen_attachment, upload_image
+from .utils import to_pinyin, gen_attachment, upload_image
+from ..utils import timeout
 
 description = """
 最近上映的电影信息。触发条件:
@@ -61,22 +62,30 @@ def test(data):
         any([i in data['message'] for i in ['上映', '热映', '有什么', '将']])
 
 
-def handle(data):
-    message = data['message']
-    if not isinstance(message, unicode):
-        message = message.decode('utf-8')
-    msg = message.split()
-    if len(msg) == 1 or (len(msg) == 2 and u'私聊' in msg[1]):
-        city = 'beijing'
-    else:
-        city = to_pinyin(msg[1])
-    if u'将' in message:
-        fn = get_later_movie_info
-    else:
-        fn = get_current_movie_info
-    ret = [r for r in fn(city, app)]
-    return '\n'.join([r[0] for r in ret]), [r[1] for r in ret]
+def handle(data, app, **kwargs):
+    ret = []
 
+    def timeout_handle():
+        return '\n'.join([r[0] for r in ret]), [r[1] for r in ret]
+
+    @timeout(15, default=timeout_handle)
+    def _handle(data, app, kwargs):
+        message = data['message']
+        if not isinstance(message, unicode):
+            message = message.decode('utf-8')
+        msg = message.split()
+        if len(msg) == 1 or (len(msg) == 2 and u'私聊' in msg[1]):
+            city = 'beijing'
+        else:
+            city = to_pinyin(msg[1])
+        if u'将' in message:
+            fn = get_later_movie_info
+        else:
+            fn = get_current_movie_info
+        for r in fn(city, app):
+            ret.append(r)
+        return '\n'.join([r[0] for r in ret]), [r[1] for r in ret]
+    return _handle(data, app, kwargs)
 
 if __name__ == '__main__':
     print handle({'message': '最近要将上映的电影'})
