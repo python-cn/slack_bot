@@ -1,6 +1,8 @@
 # coding=utf-8
 import re
 
+from flask import current_app
+
 from baidumap import travel_city, travel_attractions
 from weather import get_city
 from utils import chinese2digit, to_pinyin
@@ -48,7 +50,8 @@ def test(data):
         or ATTRACTIONS_REGEX.search(data['message'])
 
 
-def handle(data, app=None, **kwargs):
+def handle(data):
+    app = current_app
     if app is None:
         ak = '18691b8e4206238f331ad2e1ca88357e'
     else:

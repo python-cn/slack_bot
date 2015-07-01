@@ -56,7 +56,7 @@ def jw(a, b):
     return '，'.join((aa, bb))
 
 
-def handle(data, **kwargs):
+def handle(data):
     r = urllib2.urlopen(
         'http://data.earthquake.cn/datashare/globeEarthquake_csn.html',
         timeout=5)
@@ -66,4 +66,4 @@ def handle(data, **kwargs):
         (t[7], jw(t[2], t[3]), ' '.join(t[0:2]), t[5], t[4], t[6])
 
 if __name__ == '__main__':
-    print handle({'message': '地震了吗？'}, None)
+    print handle({'message': '地震了吗？'})

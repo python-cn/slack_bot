@@ -134,10 +134,10 @@ def test(data):
     return True
 
 
-def handle(data, cache, **kwargs):
+def handle(data):
     return simsimi.chat(data['message']), None
 
 if __name__ == '__main__':
-    print handle({'message': '最后一个问题'}, None)
-    print handle({'message': '还有一个问题'}, None)
-    print handle({'message': '其实我有三个问题'}, None)
+    print handle({'message': '最后一个问题'})
+    print handle({'message': '还有一个问题'})
+    print handle({'message': '其实我有三个问题'})

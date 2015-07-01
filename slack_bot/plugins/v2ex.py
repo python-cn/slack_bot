@@ -5,6 +5,7 @@ from datetime import datetime
 from lxml import etree
 import requests
 
+from slack_bot.ext import cache
 from consts import ONE_DAY, ONE_MINUTE
 
 NODES = ['linux', 'macosx', 'create', 'android', 'python', 'programmer', 'vim',
@@ -25,7 +26,7 @@ v2ex feed. 触发条件: "v2ex [%s] [私聊]". 比如:
 """ % ' | '.join(NODES)
 
 
-def get_updated_interval(cache, node_name, feeds, default=ONE_DAY):
+def get_updated_interval(node_name, feeds, default=ONE_DAY):
     updated_times = []
     for id in feeds:
         topic = cache.get(TOPIC_KEY.format(id))
@@ -44,7 +45,7 @@ def get_updated_interval(cache, node_name, feeds, default=ONE_DAY):
     return min
 
 
-def fetch2cache(node_name, cache):
+def fetch2cache(node_name):
     print 'Fetch {}'.format(node_name)
     r = requests.get(FEED_URL.format(node_name), verify=False)
     root = etree.fromstring(r.text.encode('utf-8'))
@@ -68,11 +69,11 @@ def fetch2cache(node_name, cache):
         new_feeds.append(id)
     if new_feeds:
         new_feeds += feeds[:MAX_FEEDS_LEN - len(new_feeds)]
-        interval = get_updated_interval(cache, node_name, new_feeds)
+        interval = get_updated_interval(node_name, new_feeds)
         cache.set(node_key, new_feeds, interval)
 
 
-def fetch(cache=None, force=False):
+def fetch(force=False):
     ids = set()
     for node in NODES:
         node_key = NODE_KEY.format(node)
@@ -80,7 +81,7 @@ def fetch(cache=None, force=False):
         if res and not force:
             ids.update(res)
             continue
-        fetch2cache(node, cache)
+        fetch2cache(node)
         ids.update(cache.get(node_key))
     ids = list(set(ids))
 
@@ -97,9 +98,9 @@ def test(data):
     return data['message'].startswith('v2ex')
 
 
-def handle(data, cache=None, **kwargs):
+def handle(data):
     message = data['message']
-    ids = fetch(cache=cache, force=(True if u'刷新' in message else False))
+    ids = fetch(force=(True if u'刷新' in message else False))
     contents = []
     for id in ids:
         topic = cache.get(TOPIC_KEY.format(id))
@@ -116,10 +117,12 @@ def handle(data, cache=None, **kwargs):
 
 
 if __name__ == '__main__':
-    from flask import Flask
-    from flask_cache import Cache
-    app = Flask(__name__)
-    cache = Cache()
-    cache.init_app(app, config={'CACHE_TYPE': 'simple'})
-    with app.app_context():
-        print handle({'message': 'v2ex'}, cache, app)
+    pass
+    # 由于更换了cache引入方式，这里的测试暂不可用，如有需要在`python manager send v2ex`
+    # from flask import Flask
+    # from flask_cache import Cache
+    # app = Flask(__name__)
+    # cache = Cache()
+    # cache.init_app(app, config={'CACHE_TYPE': 'simple'})
+    # with app.app_context():
+    #     print handle({'message': 'v2ex'})

@@ -35,6 +35,8 @@ import re
 import time
 import random
 
+from slack_bot.ext import cache
+
 key = time.strftime('%y-%m-%d')
 
 
@@ -42,7 +44,7 @@ def test(data):
     return any(w in data['message'] for w in ['糗百', '笑话'])
 
 
-def handle(data, cache=None, **kwargs):
+def handle(data):
     if cache is not None:
         r = cache.get(key)
         if r:
@@ -59,5 +61,5 @@ def handle(data, cache=None, **kwargs):
 
 
 if __name__ == '__main__':
-    print handle({'message': '糗百'}, None)
-    print handle({'message': '笑话'}, None)
+    print handle({'message': '糗百'})
+    print handle({'message': '笑话'})

@@ -6,6 +6,7 @@ import shutil
 import calendar
 from datetime import datetime
 
+from flask import current_app
 import pytz
 import requests
 from slacker import Slacker
@@ -58,8 +59,9 @@ def chinese2digit(ch):
         return ch
 
 
-def upload_image(canvas_or_url, image_type, app=None, filename=None,
+def upload_image(canvas_or_url, image_type, filename=None,
                  tmp_dir=None, deleted=False):
+    app = current_app
     here = os.path.abspath(os.path.dirname(__file__))
     if tmp_dir is None:
         tmp_dir = os.path.join(here, 'data')
@@ -95,10 +97,10 @@ def upload_image(canvas_or_url, image_type, app=None, filename=None,
         return ret.body['file']['url']
 
 
-def check_canvas(image_url, app, image_type):
+def check_canvas(image_url, image_type):
     match = CANVAS_REGEX.search(image_url)
     if match:
-        return upload_image(image_url, image_type, app=app)
+        return upload_image(image_url, image_type)
     else:
         return image_url
 
@@ -115,13 +117,13 @@ def convert2str(s):
     return s
 
 
-def gen_attachment(text, image_url='', image_type='url', app=None, title='',
+def gen_attachment(text, image_url='', image_type='url', title='',
                    title_link='', color='random', fallback=True):
     if color == 'random':
         color = random.choice(COLORS)
     key = 'thumb_url' if image_type == 'thumb' else 'image_url'
     attachment = {'text': text, 'title_link': title_link, 'color': color,
-                  key: check_canvas(image_url, app, image_type),
+                  key: check_canvas(image_url, image_type),
                   'title': title}
     if fallback:
         attachment.update({
