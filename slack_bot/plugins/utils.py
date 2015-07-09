@@ -59,9 +59,8 @@ def chinese2digit(ch):
         return ch
 
 
-def upload_image(canvas_or_url, image_type, filename=None,
+def upload_image(canvas_or_url, image_type, app=None, filename=None,
                  tmp_dir=None, deleted=False):
-    app = current_app
     here = os.path.abspath(os.path.dirname(__file__))
     if tmp_dir is None:
         tmp_dir = os.path.join(here, 'data')

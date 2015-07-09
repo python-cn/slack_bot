@@ -40,7 +40,6 @@ def create_app(config=None):
     return app
 
 
-@timeout(30.0)
 def callback(kwargs):
     s = convert2str(kwargs['text'])
     trigger_word = convert2str(kwargs['trigger_word'])

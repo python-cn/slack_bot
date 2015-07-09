@@ -5,7 +5,7 @@ from multiprocessing.pool import ThreadPool
 from functools import wraps
 
 
-def timeout(seconds):
+def timeout(seconds, default="timeout"):
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
@@ -14,6 +14,8 @@ def timeout(seconds):
             try:
                 return async_result.get(seconds)
             except TimeoutError:
-                return kwargs.pop('default', {'text': 'timeout'})
+                if callable(default):
+                    return default()
+                return default
         return wrapper
     return decorator
